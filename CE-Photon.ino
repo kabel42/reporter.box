@@ -63,5 +63,6 @@ void loop()
     static uint8_t i = 0;
     analogWrite(D7, i++);
   }
-  delay(10000);
+  
+  delay(60000);
 }
