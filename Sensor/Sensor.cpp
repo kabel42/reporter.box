@@ -1,8 +1,8 @@
 #include "Sensor.h"
 
-NULLSensor::NULLSensor(int pin)
+NULLSensor::NULLSensor(int addr)
 {
-  val = pin;
+  _addr = addr;
 }
 
 int NULLSensor::read(char* status)
@@ -12,10 +12,10 @@ int NULLSensor::read(char* status)
 
 float NULLSensor::read()
 {
-  return val;
+  return _addr;
 }
 
-VCNL4010Sensor::VCNL4010Sensor(int nc): drv()
+VCNL4010Sensor::VCNL4010Sensor(int addr): drv()
 {
   initOK = (drv.begin());
 }
@@ -40,9 +40,9 @@ int VCNL4010Sensor::read(char* status)
   return -1;
 }
 
-AnalogSensor::AnalogSensor(int pin)
+AnalogSensor::AnalogSensor(int addr)
 {
-  _pin   = pin;
+  _addr   = addr;
   initOK = true;
 }
 
@@ -50,7 +50,7 @@ float AnalogSensor::read()
 {
   if(initOK)
   {
-    return analogRead(_pin);
+    //FIXME: return analogRead(_addr);
   }
   return nanf("NA");
 }
@@ -59,7 +59,7 @@ int AnalogSensor::read(char* status)
 {
   if(initOK)
   {
-    sprintf(status, "ANA#%i#?", analogRead(_pin));
+    //FIXME: sprintf(status, "ANA#%i#?", analogRead(_addr));
     return 0;
   }
   return -1;

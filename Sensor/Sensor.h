@@ -12,11 +12,12 @@ enum SensorType
   None = 0,
   Light,    //VCNL4010
   Analog,
+  TMP,
 };
 
 class Sensor {
 public:
-  int   _pin;
+  int   _addr;
   _Bool initOK = false;
   const enum SensorType sensType = None;
 
@@ -30,7 +31,7 @@ public:
   const enum SensorType sensType = None;
   float val;
 
-  NULLSensor(int pin);
+  NULLSensor(int addr);
   float read(void);
   int   read(char*);
 };
@@ -41,7 +42,7 @@ public:
   VCNL4010 drv;
   const enum SensorType sensType = Light;
 
-  VCNL4010Sensor(int nc);
+  VCNL4010Sensor(int addr);
   float read(void);
   int   read(char*);
 };
@@ -51,7 +52,7 @@ class AnalogSensor: public Sensor
 public:
   const enum SensorType sensType = Analog;
 
-  AnalogSensor(int nc);
+  AnalogSensor(int addr);
   float read(void);
   int   read(char*);
 };
