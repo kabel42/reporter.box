@@ -1,11 +1,14 @@
 #include <math.h>
 
 #include "Sensor.h"
+#include "HTU20D.h"
 
 Sensor *S1; //I2C 1
 Sensor *S2; //I2C 2
 Sensor *S3; //I2C 3
 Sensor *S4; //I2C 4
+
+char data[255];
 
 void setup()
 {
@@ -13,7 +16,7 @@ void setup()
   Wire.setSpeed(CLOCK_SPEED_100KHZ);
   Wire.begin();
 
-  static NULLSensor S1tmp(0);
+  static HTU20DSensor S1tmp(0);
   S1 = &S1tmp;
 
   static NULLSensor S2tmp(0);
@@ -28,65 +31,33 @@ void setup()
   pinMode(D7, OUTPUT);
 }
 
-int data;
-char dataStr[250];
-
 void loop()
 {
   if(S1->initOK)
   {
-    int error = S1->read("");
+    int error = S1->read(data);
   }
 
   //S2
   if(S2->initOK)
   {
-    int error = S2->read("");
+    int error = S2->read(data);
   }
 
   //S3
   if(S3->initOK)
   {
-    int error = S3->read("");
+    int error = S3->read(data);
   }
 
   //S4
   if(S4->initOK)
   {
-    int error = S4->read("");
+    int error = S4->read(data);
   }
 
   //Test...
-  const uint8_t HTU_Addr = 0x40;
-  Wire.beginTransmission(HTU_Addr);
-  //Write E3 - Temp
-  Wire.write(0xE3);
-  Wire.endTransmission();
-  //Read 3Byte
-  Wire.requestFrom(HTU_Addr, 3);
-  if(Wire.available() > 2)
-  {
-    data = Wire.read()<<8;
-    data += Wire.read();
-    sprintf(dataStr, "{Temp:%f}", -46.85+175.72*(float)data/(2l<<15));
-    Particle.publish("TMP", dataStr);
-    Wire.read();
-  }
 
-  Wire.beginTransmission(HTU_Addr);
-  //Write E5 - Humidity
-  Wire.write(0xE5);
-  Wire.endTransmission();
-  //Read 3Byte
-  Wire.requestFrom(HTU_Addr, 3);
-  if(Wire.available() > 2)
-  {
-    data = Wire.read()<<8;
-    data += Wire.read();
-    sprintf(dataStr, "{RH:%f}", -6+125*(float)data/(2l<<15));
-    Particle.publish("RH", dataStr);
-    Wire.read();
-  }
 
   {
     static uint8_t i = 0;
