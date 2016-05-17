@@ -2,6 +2,13 @@
 
 HTU20DSensor::HTU20DSensor(int addr)
 {
+  if(addr != 0)
+  {
+    _addr = addr;
+  } else {
+    _addr = HTU20DADDRESS;
+  }
+
   //Check addr
   Wire.beginTransmission(_addr);
   int error = Wire.endTransmission();
@@ -50,7 +57,7 @@ int HTU20DSensor::read(char* status)
     {
       data = Wire.read()<<8;
       data += Wire.read();
-      size += snprintf(ptr+size, 250-size, "{RawValue: %x, CalValue: %f, type=\"TMP\"}, ", data, -46.85+175.72*(float)data/(2l<<15));
+      size += snprintf(ptr+size, 250-size, "{\"RawValue\": %x, \"CalValue\": %f, \"type\": \"TMP\"}, ", data, -46.85+175.72*(float)data/(2l<<15));
       Wire.read();
     }
 
@@ -64,11 +71,11 @@ int HTU20DSensor::read(char* status)
     {
       data = Wire.read()<<8;
       data += Wire.read();
-      size += snprintf(ptr+size, 250-size, "{RawValue: %x, CalValue: %f, type=\"RH\"}, ", data, -6+125*(float)data/(2l<<15));
+      size += snprintf(ptr+size, 250-size, "{\"RawValue\": %x, \"CalValue\": %f, \"type\":\"RH\"}, ", data, -6+125*(float)data/(2l<<15));
       Wire.read();
     }
 
-    size += snprintf(ptr+size, 250-size, "id: %d, ", _addr);
+    size += snprintf(ptr+size, 250-size, "\"id\": %d, ", _addr);
 
     Particle.publish("HTU20D", status);
 

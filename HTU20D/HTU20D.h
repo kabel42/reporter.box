@@ -3,14 +3,15 @@
 
 #include "Sensor.h"
 
+#define HTU20DADDRESS 0x40
+
 class HTU20DSensor: public Sensor
 {
 public:
-  const int _addr = 0x40;
   int data;
   const enum SensorType sensType = TMP;
 
-  HTU20DSensor(int addr);
+  HTU20DSensor(int addr = HTU20DADDRESS);
   float read(void);
   int   read(char*);
 };

@@ -56,13 +56,10 @@ void loop()
     int error = S4->read(data);
   }
 
-  //Test...
-
-
   {
     static uint8_t i = 0;
     analogWrite(D7, i++);
   }
-  
+
   delay(60000);
 }
