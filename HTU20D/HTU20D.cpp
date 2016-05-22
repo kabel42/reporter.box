@@ -5,8 +5,6 @@ HTU20DSensor::HTU20DSensor(int addr)
   if(addr != 0)
   {
     _addr = addr;
-  } else {
-    _addr = HTU20DADDRESS;
   }
 
   //Check addr

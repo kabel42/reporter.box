@@ -9,9 +9,10 @@ class HTU20DSensor: public Sensor
 {
 public:
   int data;
+  uint8_t _addr = HTU20DADDRESS;
   const enum SensorType sensType = TMP;
 
-  HTU20DSensor(int addr = HTU20DADDRESS);
+  HTU20DSensor(int addr=0);
   float read(void);
   int   read(char*);
 };
