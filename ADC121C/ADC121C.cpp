@@ -21,10 +21,10 @@ float ADC121CSensor::read()
   if(initOK)
   {
     Wire.beginTransmission(_addr);
-    //Write E3 - Temp
+
     Wire.write(0x00);
     Wire.endTransmission();
-    //Read 3Byte
+
     Wire.requestFrom(_addr, 2);
     if(Wire.available() == 2)
     {
@@ -32,7 +32,7 @@ float ADC121CSensor::read()
       data += Wire.read();
     }
 
-    return (9.95 / 4096.0) * data + 0.05;
+    return data;
   }
   return nanf("NA");
 }
@@ -41,22 +41,35 @@ int ADC121CSensor::read(char* status)
 {
   if(initOK)
   {
-    char* ptr = status;
-    int size = 0;
+    data = read();
 
-    Wire.beginTransmission(_addr);
-    //Write E3 - Temp
-    Wire.write(0x00);
-    Wire.endTransmission();
-    //Read 3Byte
-    Wire.requestFrom(_addr, 2);
-    if(Wire.available() == 2)
-    {
-      data = (Wire.read()&0x0F)<<8;
-      data += Wire.read();
-    }
+    publishData(_addr, "ADC", data, ((9.95 / 4096.0) * data + 0.05), "AD121C");
 
-    publishData(_addr, "ADC", data, ((9.95 / 4096.0) * data + 0.05), "ADC121C");
+    return 0;
+  }
+  return -1;
+}
+
+int MQ131Sensor::read(char* status)
+{
+  if(initOK)
+  {
+    data = read();
+
+    publishData(_addr, "OZO", data, ((9.95 / 4096.0) * data + 0.05), "MQ131");
+
+    return 0;
+  }
+  return -1;
+}
+
+int MQ131Sensor::read(char* status)
+{
+  if(initOK)
+  {
+    data = read();
+
+    publishData(_addr, "MET", data, ((9.95 / 4096.0) * data + 0.05), "MQ4");
 
     return 0;
   }
