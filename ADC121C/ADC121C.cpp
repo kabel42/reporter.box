@@ -5,6 +5,8 @@ ADC121CSensor::ADC121CSensor(int addr)
   if(addr != 0)
   {
     _addr = addr;
+  } else {
+    _addr = ADC121CADDR;
   }
 
   //Check addr
@@ -54,7 +56,7 @@ int MQ131Sensor::read(char* status)
 {
   if(initOK)
   {
-    data = read();
+    data = ADC121CSensor::read();
 
     publishData(_addr, "OZO", data, ((9.95 / 4096.0) * data + 0.05), "MQ131");
 
@@ -63,11 +65,11 @@ int MQ131Sensor::read(char* status)
   return -1;
 }
 
-int MQ131Sensor::read(char* status)
+int MQ4Sensor::read(char* status)
 {
   if(initOK)
   {
-    data = read();
+    data = ADC121CSensor::read();
 
     publishData(_addr, "MET", data, ((9.95 / 4096.0) * data + 0.05), "MQ4");
 
