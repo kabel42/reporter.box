@@ -1,0 +1,3 @@
+[submodule "Adafruit_AM2315"]
+	path = Adafruit_AM2315
+	url = git@github.com:adafruit/Adafruit_AM2315.git

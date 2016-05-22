@@ -89,3 +89,44 @@ int AnalogSensor::read(char* status)
   }
   return -1;
 }
+
+AM2315Sensor::AM2315Sensor(int addr): drv()
+{
+  if(addr != 0)
+  {
+    _addr = addr;
+  } else {
+    _addr = AM2315_I2CADDR;
+  }
+
+  //Check addr
+  Wire.beginTransmission(_addr);
+  int error = Wire.endTransmission();
+
+  if(error == 0)
+  {
+    initOK = (drv.begin());
+  }
+}
+
+float AM2315Sensor::read()
+{
+  if(initOK)
+  {
+    //return drv.readAmbient();
+    return drv.readTemperature();
+  }
+  return nanf("NA");
+}
+
+int AM2315Sensor::read(char* status)
+{
+  if(initOK)
+  {
+    //sprintf(status, "AMB#%i#?##DIST#%i#?", drv.readAmbient(), drv.readProximity());
+    publishData(_addr, "TMP", drv.readTemperature(), nanf("TBD"), "AM2315");
+    publishData(_addr, "RH", drv.readHumidity(), nanf("TBD"), "AM2315");
+    return 0;
+  }
+  return -1;
+}

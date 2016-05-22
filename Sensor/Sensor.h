@@ -6,6 +6,7 @@
 #include "application.h"
 
 #include "VCNL4010.h"
+#include "Adafruit_AM2315.h"
 
 enum SensorType
 {
@@ -59,4 +60,14 @@ public:
   int   read(char*);
 };
 
+class AM2315Sensor: public Sensor
+{
+public:
+  Adafruit_AM2315 drv;
+  const enum SensorType sensType = Light;
+
+  AM2315Sensor(int addr=0);
+  float read(void);
+  int   read(char*);
+};
 #endif

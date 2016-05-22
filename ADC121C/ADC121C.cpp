@@ -58,7 +58,7 @@ int MQ131Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "OZO", data, ((9.95 / 4096.0) * data + 0.05), "MQ131");
+    publishData(_addr, "OZO", data, ((100 / 4096.0) * data), "MQ131");
 
     return 0;
   }
@@ -71,7 +71,7 @@ int MQ4Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "MET", data, ((9.95 / 4096.0) * data + 0.05), "MQ4");
+    publishData(_addr, "MET", data, ((100 / 4096.0) * data), "MQ4");
 
     return 0;
   }
