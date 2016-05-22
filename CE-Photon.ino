@@ -19,10 +19,18 @@ void setup()
   Wire.setSpeed(CLOCK_SPEED_100KHZ);
   Wire.begin();
 
-  for(uint8_t i=0; i<128; i++)
+  //FIX AM2315
+  Wire.beginTransmission(AM2315_I2CADDR);
+  Wire.endTransmission();
+  delay(500);
+  //End FIX
+
+  for(uint8_t i=1; i<128; i++)
   {
     Wire.beginTransmission(i);
+    delay(10);
     int error = Wire.endTransmission();
+    delay(10);
 
     if(error == 0)
     {
@@ -32,7 +40,9 @@ void setup()
     }
   }
 
-  static HTU20DSensor S1tmp(0);
+  Particle.publish("I2C", "Done");
+
+  static AM2315Sensor S1tmp(0);
   S1 = &S1tmp;
 
   static VCNL4010Sensor S2tmp(0);
