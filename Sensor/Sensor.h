@@ -15,9 +15,11 @@ enum SensorType
   TMP,
 };
 
+void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
+
 class Sensor {
 public:
-  int   _addr;
+  uint8_t _addr;
   _Bool initOK = false;
   const enum SensorType sensType = None;
 
