@@ -19,7 +19,7 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
 
 class Sensor {
 public:
-  uint8_t _addr;
+  uint8_t _addr = 0;
   _Bool initOK = false;
   const enum SensorType sensType = None;
 
@@ -33,7 +33,7 @@ public:
   const enum SensorType sensType = None;
   float val;
 
-  NULLSensor(int addr);
+  NULLSensor(int addr=0);
   float read(void);
   int   read(char*);
 };
@@ -44,7 +44,7 @@ public:
   VCNL4010 drv;
   const enum SensorType sensType = Light;
 
-  VCNL4010Sensor(int addr);
+  VCNL4010Sensor(int addr=0);
   float read(void);
   int   read(char*);
 };
@@ -54,7 +54,7 @@ class AnalogSensor: public Sensor
 public:
   const enum SensorType sensType = Analog;
 
-  AnalogSensor(int addr);
+  AnalogSensor(int addr=0);
   float read(void);
   int   read(char*);
 };

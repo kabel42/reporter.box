@@ -38,10 +38,10 @@ void setup()
   static VCNL4010Sensor S2tmp(0);
   S2 = &S2tmp;
 
-  static ADC121CSensor S3tmp(0x50);
+  static MQ131Sensor S3tmp(0);
   S3 = &S3tmp;
 
-  static ADC121CSensor S4tmp(0x51);
+  static MQ4Sensor S4tmp(0);
   S4 = &S4tmp;
 
   pinMode(D7, OUTPUT);
