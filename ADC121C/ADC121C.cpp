@@ -5,8 +5,6 @@ ADC121CSensor::ADC121CSensor(int addr)
   if(addr != 0)
   {
     _addr = addr;
-  } else {
-    _addr = ADC121CADDR;
   }
 
   //Check addr
