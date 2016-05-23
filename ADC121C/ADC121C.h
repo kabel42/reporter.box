@@ -41,4 +41,17 @@ public:
   };
   int read(char*);
 };
+
+class MQ135Sensor: public ADC121CSensor
+{
+public:
+  MQ135Sensor(int addr=0):ADC121CSensor(addr)
+  {
+    if(addr == 0)
+    {
+      _addr = 0x52;
+    }
+  };
+  int read(char*);
+};
 #endif

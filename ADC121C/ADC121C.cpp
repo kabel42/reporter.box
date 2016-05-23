@@ -77,3 +77,16 @@ int MQ4Sensor::read(char* status)
   }
   return -1;
 }
+
+int MQ135Sensor::read(char* status)
+{
+  if(initOK)
+  {
+    data = ADC121CSensor::read();
+
+    publishData(_addr, "NH3", data, ((100 / 4096.0) * data), "MQ135");
+
+    return 0;
+  }
+  return -1;
+}
