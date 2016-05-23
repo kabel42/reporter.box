@@ -7,6 +7,7 @@
 
 #include "VCNL4010.h"
 #include "Adafruit_AM2315.h"
+#include "SparkFunISL29125.h"
 
 enum SensorType
 {
@@ -14,6 +15,7 @@ enum SensorType
   Light,    //VCNL4010
   Analog,
   TMP,
+  Color,
 };
 
 void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
@@ -67,6 +69,17 @@ public:
   const enum SensorType sensType = Light;
 
   AM2315Sensor(int addr=0);
+  float read(void);
+  int   read(char*);
+};
+
+class ISL29125Sensor: public Sensor
+{
+public:
+  SFE_ISL29125 drv;
+  const enum SensorType sensType = Color;
+
+  ISL29125Sensor(int addr=0);
   float read(void);
   int   read(char*);
 };

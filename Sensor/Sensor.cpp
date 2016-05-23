@@ -130,3 +130,48 @@ int AM2315Sensor::read(char* status)
   }
   return -1;
 }
+
+ISL29125Sensor::ISL29125Sensor(int addr): drv()
+{
+  if(addr != 0)
+  {
+    _addr = addr;
+  } else {
+    _addr = ISL_I2C_ADDR;
+  }
+
+  //Check addr
+  Wire.beginTransmission(_addr);
+  int error = Wire.endTransmission();
+
+  if(error == 0)
+  {
+    initOK = (drv.init());
+  }
+}
+
+float ISL29125Sensor::read()
+{
+  if(initOK)
+  {
+    //return drv.readAmbient();
+    return drv.readRed()+drv.readBlue()+drv.readGreen();
+  }
+  return nanf("NA");
+}
+
+int ISL29125Sensor::read(char* status)
+{
+  if(initOK)
+  {
+    float red   = drv.readRed();
+    float green = drv.readGreen();
+    float blue  = drv.readBlue();
+    float mul   = 10./65535.;
+    publishData(_addr, "Red", red, red*mul, "ISE29125");
+    publishData(_addr, "Green", green, green*mul, "ISE29125");
+    publishData(_addr, "Blue", blue, blue*mul, "ISE29125");
+    return 0;
+  }
+  return -1;
+}
