@@ -4,7 +4,15 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
 {
   static char pubstring[252];
   //snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"Measurement ID\": \"%s\", \"sensor\": {\"address:\"%d, \"name\":%s}}, ", raw, data, measID, addr, sens);
-  snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"sensor\": {\"address\": %d}}", raw, data, addr);
+
+  //Gen Id from addr and measID
+  uint32_t id = addr<<(3*8);
+  int len = strlen(measID);
+  for(int i = 0; i<len; i++)
+  {
+    id += measID[i]<<(8*(2-i));
+  }
+  snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"sensor\": {\"address\": %li}}", raw, data, id);
 
   Particle.publish("measurement", pubstring);
   delay(1000);
