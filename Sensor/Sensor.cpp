@@ -3,7 +3,8 @@
 void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
 {
   static char pubstring[252];
-  snprintf(pubstring, 250, "{\"Raw Value\": %f, \"Calibrated Value\": %f, \"Measurement ID\": \"%s\", \"Sensor Address\": %d, \"Sensor Name\":%s}, ", raw, data, measID, addr, sens);
+  //snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"Measurement ID\": \"%s\", \"sensor\": {\"address:\"%d, \"name\":%s}}, ", raw, data, measID, addr, sens);
+  snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"sensor\": {\"address\": %d}}", raw, data, addr);
 
   Particle.publish("measurement", pubstring);
   delay(1000);
