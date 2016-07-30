@@ -81,6 +81,21 @@ void setup()
   Wire.setSpeed(10000);
   Wire.begin();
 
+  for(uint8_t i=1; i<128; i++)
+  {
+    Wire.beginTransmission(i);
+    delay(10);
+    int error = Wire.endTransmission();
+    delay(10);
+
+    if(error == 0)
+    {
+      snprintf(data, 250, "0x%X", i);
+      Particle.publish("I2C", data);
+      delay(1000);
+    }
+  }
+
   setupOled();
 
   //FIX AM2315
