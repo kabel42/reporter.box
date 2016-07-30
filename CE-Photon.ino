@@ -2,6 +2,8 @@
 #include <algorithm>    // std::for_each
 #include <vector>       // std::vector
 
+#include "SparkFunMicroOLED.h"
+
 #include "Sensor.h"
 #include "HTU20D.h"
 #include "ADC121C.h"
@@ -10,6 +12,23 @@ std::vector<Sensor*> sensorList;
 
 char data[255];
 int delaytime = 60000;
+
+MicroOLED oled(MODE_I2C, D7, 0);
+
+enum dsplStatus
+{
+  INIT,
+  IN,
+  OUT,
+}
+
+dsplStatus dspl = INIT;
+
+void setupOled()
+{
+  oled.begin();    // Initialize the OLED
+  oled.setFontType(1);
+}
 
 int readIfInit(Sensor *S);
 
@@ -22,12 +41,24 @@ int readIfInit(Sensor *S)
       return S->read(data);
     }
   }
-  delay(1000);
   return 0;
+}
+
+//Get Device Name
+String devName;
+void handler(const char *topic, const char *data) {
+{
+  devName = String(data);
 }
 
 void setup()
 {
+  //Get Device Name
+  Particle.subscribe("spark/", handler);
+  Particle.publish("spark/device/name");
+  //delay(1000);
+  //Particle.unsubscribe();
+
   //Setup I2C
   Wire.setSpeed(10000);
   Wire.begin();
@@ -40,8 +71,6 @@ void setup()
   sensorList.push_back(new MQ131Sensor(0x50));
   sensorList.push_back(new MQ4Sensor(0x51));
   sensorList.push_back(new MQ135Sensor(0x52));
-
-  pinMode(D7, OUTPUT);
 }
 
 void loop()
@@ -49,10 +78,19 @@ void loop()
   for(Sensor *S: sensorList)
   {
     readIfInit(S);
+    delay(100);
   }
 
-  static uint8_t i = 0;
-  analogWrite(D7, i++);
-
-  delay(delaytime);
+  // Display stuff
+  oled.clear(PAGE);
+  oled.setCursor(0, 0);  // Set the text cursor to the upper-left of the screen.
+  switch(dspl)
+  {
+    case INIT:
+      oled.println(devName);
+      oled.println("Running...");
+      break;
+    default:
+      oled.println("???");
+  }
 }
