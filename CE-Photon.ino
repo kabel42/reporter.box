@@ -45,7 +45,7 @@ int readIfInit(Sensor *S)
 }
 
 //Get Device Name
-String devName;
+String devName = "???";
 void handler(const char *topic, const char *data)
 {
   devName = String(data);
@@ -102,7 +102,8 @@ void loop()
   switch(dspl)
   {
     case INIT:
-      oled.println(devName);
+      if(devName)
+        oled.println(devName);
       oled.println("Running...");
       break;
     default:
