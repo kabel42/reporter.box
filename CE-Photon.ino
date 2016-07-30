@@ -7,6 +7,7 @@
 #include "Sensor.h"
 #include "HTU20D.h"
 #include "ADC121C.h"
+#include "tinyAudio.h"
 
 std::vector<Sensor*> sensorList;
 
@@ -69,6 +70,7 @@ void setup()
   sensorList.push_back(new MQ131Sensor(0x50));
   sensorList.push_back(new MQ4Sensor(0x51));
   sensorList.push_back(new MQ135Sensor(0x52));
+  sensorList.push_back(new AudioSensor(0x08));
 }
 
 void loop()

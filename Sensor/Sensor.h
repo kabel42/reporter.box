@@ -16,6 +16,7 @@ enum SensorType
   Analog,
   TMP,
   Color,
+  Audio,
 };
 
 void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
