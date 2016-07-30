@@ -83,6 +83,11 @@ void setup()
 
   setupOled();
 
+  //FIX AM2315
+  Wire.beginTransmission(AM2315_I2CADDR);
+  Wire.endTransmission();
+  delay(500);
+
   //Init Sensors
   sensorList.push_back(new AM2315Sensor(0));
   sensorList.push_back(new HTU20DSensor(0));
@@ -103,13 +108,17 @@ void setup()
 
 void loop()
 {
+  //Check Timer
+  if(pubTime)
+    publishDataNow();
+
   // Display stuff
   oled.clear(PAGE);
   oled.setCursor(0, 0);  // Set the text cursor to the upper-left of the screen.
   switch(dspl)
   {
     case INIT:
-      if(&devName == NULL)
+      if(&devName != NULL)
         oled.println(devName);
       oled.println("Running...");
       break;
@@ -119,7 +128,4 @@ void loop()
   };
   oled.display();
   delay(100);
-
-  if(pubTime)
-    publishDataNow();
 }
