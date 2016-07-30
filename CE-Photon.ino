@@ -8,6 +8,7 @@
 #include "HTU20D.h"
 #include "ADC121C.h"
 #include "tinyAudio.h"
+#include "SoilSens.h"
 
 std::vector<Sensor*> sensorList;
 
@@ -81,7 +82,8 @@ void setup()
   sensorList.push_back(new MQ131Sensor(0x50));
   sensorList.push_back(new MQ4Sensor(0x51));
   sensorList.push_back(new MQ135Sensor(0x52));
-  sensorList.push_back(new AudioSensor(0x08));
+  sensorList.push_back(new AudioSensor(0));
+  sensorList.push_back(new SoilSensor(0));
 
   publishTimer.start();
 }

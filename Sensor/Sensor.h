@@ -17,6 +17,7 @@ enum SensorType
   TMP,
   Color,
   Audio,
+  Soil,
 };
 
 void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
