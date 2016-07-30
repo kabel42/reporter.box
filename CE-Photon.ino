@@ -20,9 +20,7 @@ enum dsplStatus
   INIT,
   IN,
   OUT,
-}
-
-dsplStatus dspl = INIT;
+} dspl;
 
 void setupOled()
 {
@@ -46,7 +44,7 @@ int readIfInit(Sensor *S)
 
 //Get Device Name
 String devName;
-void handler(const char *topic, const char *data) {
+void handler(const char *topic, const char *data)
 {
   devName = String(data);
 }
@@ -92,5 +90,6 @@ void loop()
       break;
     default:
       oled.println("???");
-  }
+      dspl = INIT;
+  };
 }
