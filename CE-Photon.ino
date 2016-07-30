@@ -50,6 +50,17 @@ void handler(const char *topic, const char *data)
   devName = String(data);
 }
 
+void publishDataTimed()
+{
+  for(Sensor *S: sensorList)
+  {
+    readIfInit(S);
+    //delay(100);
+  }
+}
+
+Timer publishTimer(delaytime, publishDataTimed);
+
 void setup()
 {
   //Get Device Name
@@ -71,16 +82,12 @@ void setup()
   sensorList.push_back(new MQ4Sensor(0x51));
   sensorList.push_back(new MQ135Sensor(0x52));
   sensorList.push_back(new AudioSensor(0x08));
+
+  publishTimer.start();
 }
 
 void loop()
 {
-  for(Sensor *S: sensorList)
-  {
-    readIfInit(S);
-    delay(100);
-  }
-
   // Display stuff
   oled.clear(PAGE);
   oled.setCursor(0, 0);  // Set the text cursor to the upper-left of the screen.
@@ -94,4 +101,5 @@ void loop()
       oled.println("???");
       dspl = INIT;
   };
+  delay(100);
 }
