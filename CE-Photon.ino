@@ -81,6 +81,12 @@ void setup()
   Wire.setSpeed(10000);
   Wire.begin();
 
+  //FIX AM2315
+  Wire.beginTransmission(AM2315_I2CADDR);
+  Wire.endTransmission();
+  delay(500);
+  //End FIX
+
   for(uint8_t i=1; i<128; i++)
   {
     Wire.beginTransmission(i);
@@ -96,12 +102,9 @@ void setup()
     }
   }
 
-  setupOled();
+  Particle.publish("I2C", "Done");
 
-  //FIX AM2315
-  Wire.beginTransmission(AM2315_I2CADDR);
-  Wire.endTransmission();
-  delay(500);
+  setupOled();
 
   //Init Sensors
   sensorList.push_back(new AM2315Sensor(0));
