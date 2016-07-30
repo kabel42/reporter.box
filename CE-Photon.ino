@@ -51,13 +51,20 @@ void handler(const char *topic, const char *data)
   devName = String(data);
 }
 
-void publishDataTimed()
+bool pubTime = true;
+
+void publishDataNow()
 {
   for(Sensor *S: sensorList)
   {
     readIfInit(S);
-    //delay(100);
   }
+  pubTime = false;
+}
+
+void publishDataTimed()
+{
+  pubTime = true;
 }
 
 Timer publishTimer(delaytime, publishDataTimed);
@@ -102,7 +109,7 @@ void loop()
   switch(dspl)
   {
     case INIT:
-      if(devName)
+      if(&devName == NULL)
         oled.println(devName);
       oled.println("Running...");
       break;
@@ -112,4 +119,7 @@ void loop()
   };
   oled.display();
   delay(100);
+
+  if(pubTime)
+    publishDataNow();
 }
