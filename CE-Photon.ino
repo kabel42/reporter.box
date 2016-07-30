@@ -74,6 +74,8 @@ void setup()
   Wire.setSpeed(10000);
   Wire.begin();
 
+  setupOled();
+
   //Init Sensors
   sensorList.push_back(new AM2315Sensor(0));
   sensorList.push_back(new HTU20DSensor(0));
