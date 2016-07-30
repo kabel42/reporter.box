@@ -88,6 +88,10 @@ void setup()
   sensorList.push_back(new SoilSensor(0));
 
   publishTimer.start();
+
+  pinMode(A3, INPUT_PULLDOWN); //RED Button
+  pinMode(A4, INPUT_PULLDOWN); //Black Button
+
 }
 
 void loop()
@@ -105,5 +109,6 @@ void loop()
       oled.println("???");
       dspl = INIT;
   };
+  oled.display();
   delay(100);
 }
