@@ -103,17 +103,7 @@ MicroOLED::MicroOLED(micro_oled_mode mode, uint8_t rst, uint8_t dc, uint8_t cs)
 	if (mode == MODE_SPI)
 		setup(mode, rst, dc, cs);
 	else if (mode == MODE_I2C)
-	{
 		setup(mode, rst, dc, cs);
-		if (interface == MODE_I2C)
-		{
-			if (dcPin == 0)
-				dcPin = I2C_ADDRESS_SA0_0;
-			else
-				dcPin = I2C_ADDRESS_SA0_1;
-			i2cSetup();
-		}
-	}
 }
 
 void MicroOLED::setup(micro_oled_mode mode, uint8_t rst, uint8_t dc, uint8_t cs)
