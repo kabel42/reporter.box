@@ -81,15 +81,13 @@ void setup()
   Wire.setSpeed(10000);
   Wire.begin();
 
+  setupOled();
+
   //FIX AM2315
   Wire.beginTransmission(AM2315_I2CADDR);
   Wire.endTransmission();
   delay(500);
   //End FIX
-
-  Particle.publish("I2C", "Done");
-
-  setupOled();
 
   //Init Sensors
   sensorList.push_back(new AM2315Sensor(0));
