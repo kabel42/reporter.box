@@ -70,7 +70,7 @@ void publishDataTimed()
 Timer publishTimer(delaytime, publishDataTimed);
 
 //Audio
-AudioSensor audio(0, delaytime);
+AudioSensor *audioSens;
 
 void setup()
 {
@@ -83,6 +83,8 @@ void setup()
   //Setup I2C
   Wire.setSpeed(10000);
   Wire.begin();
+
+  audioSens = new AudioSensor(0, delaytime);
 
   setupOled();
 
@@ -116,7 +118,8 @@ void loop()
     publishDataNow();
 
   //Audio
-  audio.poll();
+  if(audioSens->initOK)
+    audioSens->poll();
 
   // Display stuff
   oled.clear(PAGE);
