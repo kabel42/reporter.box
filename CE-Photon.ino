@@ -69,6 +69,9 @@ void publishDataTimed()
 
 Timer publishTimer(delaytime, publishDataTimed);
 
+//Audio
+AudioSensor audio(0, delaytime);
+
 void setup()
 {
   //Get Device Name
@@ -97,7 +100,6 @@ void setup()
   sensorList.push_back(new MQ131Sensor(0x50));
   sensorList.push_back(new MQ4Sensor(0x51));
   sensorList.push_back(new MQ135Sensor(0x52));
-  sensorList.push_back(new AudioSensor(0));
   sensorList.push_back(new SoilSensor(0));
 
   publishTimer.start();
@@ -112,6 +114,9 @@ void loop()
   //Check Timer
   if(pubTime)
     publishDataNow();
+
+  //Audio
+  audio.poll();
 
   // Display stuff
   oled.clear(PAGE);
@@ -128,5 +133,5 @@ void loop()
       dspl = INIT;
   };
   oled.display();
-  delay(100);
+  delay(10);
 }

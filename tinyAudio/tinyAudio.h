@@ -10,9 +10,13 @@ class AudioSensor: public Sensor
 public:
   const enum SensorType sensType = Audio;
   int data;
+  unsigned long lastDataMillis;
+  int intervall;
 
-  AudioSensor(int addr=0);
+  AudioSensor(int addr);
+  AudioSensor(int addr, int delaytime);
   float read(void);
   int   read(char*);
+  void poll();
 };
 #endif
