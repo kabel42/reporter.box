@@ -8,11 +8,33 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
   //Gen Id from addr and measID
   uint32_t id = addr<<(3*8);
   int len = strlen(measID);
+  if(len>3)
+    len = 3;
+
   for(int i = 0; i<len; i++)
   {
     id += measID[i]<<(8*(2-i));
   }
-  snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"sensor\": {\"address\": %li}}", raw, data, id);
+
+  int pos = 0;
+
+  pos += snprintf(pubstring+pos, 250-pos, "{\"uncalibrated_value\": ");
+  if(isfinite(raw))
+  {
+    pos += snprintf(pubstring+pos, 250-pos, "%f", raw);
+  } else {
+    pos += snprintf(pubstring+pos, 250-pos, "null");
+  }
+
+  pos += snprintf(pubstring+pos, 250-pos, ", \"calibrated_value\": ");
+
+  if(isfinite(data))
+  {
+    pos += snprintf(pubstring+pos, 250-pos, "%f", data);
+  } else {
+    pos += snprintf(pubstring+pos, 250-pos, "null");
+  }
+  pos += snprintf(pubstring+pos, 250-pos, ", \"sensor\": {\"address\": %li}}", id);
 
   Particle.publish("measurement", pubstring);
   delay(1000);
