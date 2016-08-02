@@ -16,17 +16,14 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
     id += measID[i]<<(8*(2-i));
   }
 
-  int pos = 0;
   char rawStr[10];
   char dataStr[10];
 
-
   if(isfinite(raw))
   {
-      snprintf(rawStr, 9, "%f", raw);
+    snprintf(rawStr, 9, "%f", raw);
   } else {
-    if(pos < 250)
-      snprintf(rawStr, 9, "null");
+    snprintf(rawStr, 9, "null");
   }
 
   if(isfinite(data))
