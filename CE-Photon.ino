@@ -27,7 +27,7 @@ enum dsplStatus
 void setupOled()
 {
   oled.begin();    // Initialize the OLED
-  oled.setFontType(1);
+  //oled.setFontType(1);
 }
 
 int readIfInit(Sensor *S);
@@ -45,7 +45,7 @@ int readIfInit(Sensor *S)
 }
 
 //Get Device Name
-String devName = "???";
+String devName = "Starting";
 void handler(const char *topic, const char *data)
 {
   devName = String(data);
