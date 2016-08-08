@@ -21,18 +21,18 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
 
   if(isfinite(raw))
   {
-    snprintf(rawStr, 9, "%f", raw);
+    snprintf(rawStr, 9, "\"uncalibrated_value\": %f,", raw);
   } else {
-    snprintf(rawStr, 9, "null");
+    snprintf(rawStr, 9, "");
   }
 
   if(isfinite(data))
   {
-    snprintf(dataStr, 9, "%f", data);
+    snprintf(dataStr, 9, "\"calibrated_value\": %f,", data);
   } else {
-    snprintf(dataStr, 9, "null");
+    snprintf(dataStr, 9, "");
   }
-  snprintf(pubstring, 250, "{\"uncalibrated_value\": %s, \"calibrated_value\": %s, \"sensor\": {\"address\": %li}}", rawStr, dataStr, id);
+  snprintf(pubstring, 250, "{%s %s \"sensor\": {\"address\": %li}}", rawStr, dataStr, id);
 
   Particle.publish("measurement", pubstring);
   delay(1000);
