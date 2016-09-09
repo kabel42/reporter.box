@@ -21,14 +21,14 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
 
   if(isfinite(raw))
   {
-    snprintf(rawStr, 34, "\"uncalibrated_value\": %f,", raw);
+    snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
   } else {
     snprintf(rawStr, 34, "");
   }
 
   if(isfinite(data))
   {
-    snprintf(dataStr, 34, "\"calibrated_value\": %f,", data);
+    snprintf(dataStr, 34, "\"calibrated_value\": %.2f,", data);
   } else {
     snprintf(dataStr, 34, "");
   }
