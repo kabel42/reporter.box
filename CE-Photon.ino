@@ -74,7 +74,7 @@ Timer publishTimer(delaytime, publishDataTimed);
 AudioSensor *audioSens;
 
 //Relay
-Relay relay;
+Relay relay();
 
 void setup()
 {
