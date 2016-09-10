@@ -74,7 +74,7 @@ Timer publishTimer(delaytime, publishDataTimed);
 AudioSensor *audioSens;
 
 //Relay
-Relay relay();
+Relay *relay;
 
 void setup()
 {
@@ -112,6 +112,9 @@ void setup()
 
   pinMode(A3, INPUT_PULLDOWN); //RED Button
   pinMode(A4, INPUT_PULLDOWN); //Black Button
+
+  //Relay
+  relay = new Relay();
 }
 
 void loop()

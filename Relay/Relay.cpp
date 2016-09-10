@@ -42,5 +42,5 @@ int Relay::activateRelay(String data)
 
 int Relay::deactivateRelay(String data)
 {
-    return setRelay(data.toInt(), true);
+    return setRelay(data.toInt(), false);
 }
