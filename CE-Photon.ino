@@ -72,6 +72,27 @@ Timer publishTimer(delaytime, publishDataTimed);
 //Audio
 AudioSensor *audioSens;
 
+//Aktor
+const int relais[4] = {D3, D4, D5, D6};
+
+int activateAktor(String data) {
+  int aktorData = data.toInt();
+  aktorData = (aktorData>0 && aktorData<5) ? aktorData : 0;
+
+  digitalWrite(relais[aktorData-1], 1);
+
+  return aktorData;
+}
+
+int deactivateAktor(String data) {
+  int aktorData = data.toInt();
+  aktorData = (aktorData>0 && aktorData<5) ? aktorData : 0;
+
+  digitalWrite(relais[aktorData-1], 0);
+
+  return aktorData;
+}
+
 void setup()
 {
   //Get Device Name
@@ -109,6 +130,8 @@ void setup()
   pinMode(A3, INPUT_PULLDOWN); //RED Button
   pinMode(A4, INPUT_PULLDOWN); //Black Button
 
+  Particle.function("activate", activateAktor);
+  Particle.function("deactivate", deactivateAktor);
 }
 
 void loop()
