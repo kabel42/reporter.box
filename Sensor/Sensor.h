@@ -28,8 +28,9 @@ public:
   _Bool initOK = false;
   const enum SensorType sensType = None;
 
-  virtual float read(void)  = 0;
-  virtual int   read(char*) = 0;
+  virtual float read(void)    = 0;
+  virtual int   read(char*)   = 0;
+//  virtual _Bool getCal(char*) = 0;
 };
 
 class NULLSensor: public Sensor
@@ -41,6 +42,7 @@ public:
   NULLSensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool getCal(char*);
 };
 
 class VCNL4010Sensor: public Sensor
@@ -52,6 +54,7 @@ public:
   VCNL4010Sensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool  getCal(char*);
 };
 
 class AnalogSensor: public Sensor
@@ -62,6 +65,7 @@ public:
   AnalogSensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool  getCal(char*);
 };
 
 class AM2315Sensor: public Sensor
@@ -73,6 +77,7 @@ public:
   AM2315Sensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool  getCal(char*);
 };
 
 class ISL29125Sensor: public Sensor
@@ -84,5 +89,6 @@ public:
   ISL29125Sensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool  getCal(char*);
 };
 #endif

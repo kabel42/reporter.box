@@ -14,6 +14,7 @@ public:
   ADC121CSensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool  getCal(char*);
 };
 
 class MQ131Sensor: public ADC121CSensor
@@ -27,6 +28,7 @@ public:
     }
   };
   int read(char*);
+  _Bool  getCal(char*);
 };
 
 class MQ4Sensor: public ADC121CSensor
@@ -40,6 +42,7 @@ public:
     }
   };
   int read(char*);
+  _Bool  getCal(char*);
 };
 
 class MQ135Sensor: public ADC121CSensor
@@ -53,5 +56,6 @@ public:
     }
   };
   int read(char*);
+  _Bool  getCal(char*);
 };
 #endif

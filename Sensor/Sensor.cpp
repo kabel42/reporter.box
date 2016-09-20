@@ -1,6 +1,6 @@
 #include "Sensor.h"
 
-void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
+void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens)
 {
   static char pubstring[252];
   //snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"Measurement ID\": \"%s\", \"sensor\": {\"address:\"%d, \"name\":%s}}, ", raw, data, measID, addr, sens);
@@ -22,16 +22,20 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
   if(isfinite(raw))
   {
     snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
-  } else {
-    snprintf(rawStr, 34, "");
-  }
-
-  if(isfinite(data))
-  {
+    data = (raw*scale)+offset;
+    if(data<1)
+    {
+      data = 1;
+    } else if(data>10)
+    {
+      data = 10;
+    }
     snprintf(dataStr, 34, "\"calibrated_value\": %.2f,", data);
   } else {
+    snprintf(rawStr, 34, "");
     snprintf(dataStr, 34, "");
   }
+
   snprintf(pubstring, 250, "{%s %s \"sensor\": {\"address\": %li}}", rawStr, dataStr, id);
 
   Particle.publish("measurement", pubstring);
@@ -86,12 +90,20 @@ int VCNL4010Sensor::read(char* status)
 {
   if(initOK)
   {
-    //sprintf(status, "AMB#%i#?##DIST#%i#?", drv.readAmbient(), drv.readProximity());
     publishData(VCNL4010_ADRESS, "AMB", drv.readAmbient(), nanf("TBD"), "VCNL4010");
     publishData(VCNL4010_ADRESS, "PRX", drv.readProximity(), nanf("TBD"), "VCNL4010");
     return 0;
   }
   return -1;
+}
+
+VCNL4010Sensor::getCal(char *id)
+{
+  if(id == "AMB")
+  {
+
+  }
+  return false; //TODO
 }
 
 AnalogSensor::AnalogSensor(int addr)
@@ -160,6 +172,11 @@ int AM2315Sensor::read(char* status)
   return -1;
 }
 
+AM2315Sensor::getCal(char *id)
+{
+  return false; //TODO
+}
+
 ISL29125Sensor::ISL29125Sensor(int addr): drv()
 {
   if(addr != 0)
@@ -203,4 +220,9 @@ int ISL29125Sensor::read(char* status)
     return 0;
   }
   return -1;
+}
+
+ISL29125Sensor::getCal(char *id)
+{
+  return false; //TODO
 }

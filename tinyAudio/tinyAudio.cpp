@@ -119,3 +119,8 @@ void AudioSensor::poll()
     }
   }
 }
+
+AudioSensor::getCal(char *id)
+{
+  return false; //TODO
+}

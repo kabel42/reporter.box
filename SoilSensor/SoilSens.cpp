@@ -61,3 +61,8 @@ int SoilSensor::read(char* status)
   }
   return -1;
 }
+
+SoilSensor::getCal(char *id)
+{
+  return false; //TODO
+}

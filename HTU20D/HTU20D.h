@@ -15,6 +15,7 @@ public:
   HTU20DSensor(int addr=0);
   float read(void);
   int   read(char*);
+  _Bool  getCal(char*);
 };
 
 #endif

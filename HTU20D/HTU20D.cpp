@@ -77,3 +77,11 @@ int HTU20DSensor::read(char* status)
   }
   return -1;
 }
+
+_Bool HTU20DSensor::getCal(char *id)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+
+  }
+  return false; //TODO
+}
