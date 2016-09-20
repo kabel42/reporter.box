@@ -28,7 +28,7 @@ float readEnv(uint8_t _addr)
   Wire.write(0x01);
   Wire.endTransmission();
 
-  Wire.requestFrom(_addr, 2);
+  Wire.requestFrom(_addr, (uint8_t)2);
   if(Wire.available() > 1)
   {
     data = Wire.read()<<8;
@@ -46,7 +46,7 @@ float readGate(uint8_t _addr)
   Wire.write(0x02);
   Wire.endTransmission();
 
-  Wire.requestFrom(_addr, 2);
+  Wire.requestFrom(_addr, (uint8_t)2);
   if(Wire.available() > 1)
   {
     data = Wire.read()<<8;
@@ -89,7 +89,7 @@ void AudioSensor::poll()
     Wire.write(0x02);
     Wire.endTransmission();
 
-    Wire.requestFrom(_addr, 2);
+    Wire.requestFrom(_addr, (uint8_t)2);
     if(Wire.available() > 1)
     {
       data = Wire.read()<<8;
@@ -108,7 +108,7 @@ void AudioSensor::poll()
           Wire.write(0x01);
           Wire.endTransmission();
 
-          Wire.requestFrom(_addr, 2);
+          Wire.requestFrom(_addr, (uint8_t)2);
           if(Wire.available() > 1)
           {
             data = Wire.read()<<8;

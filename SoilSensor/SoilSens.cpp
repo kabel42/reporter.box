@@ -26,7 +26,7 @@ float SoilSensor::read()
     Wire.write(0x00);
     Wire.endTransmission();
 
-    Wire.requestFrom(_addr, 2);
+    Wire.requestFrom(_addr, (uint8_t)2);
     if(Wire.available() > 1)
     {
       data = Wire.read()<<8;

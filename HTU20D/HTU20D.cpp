@@ -24,7 +24,7 @@ int readTemp(uint8_t _addr)
   Wire.write(0xE3);
   Wire.endTransmission();
   //Read 3Byte
-  Wire.requestFrom(_addr, 3);
+  Wire.requestFrom(_addr, (uint8_t)3);
   if(Wire.available() > 2)
   {
     data = Wire.read()<<8;
@@ -42,7 +42,7 @@ int readHum(uint8_t _addr)
   Wire.write(0xE5);
   Wire.endTransmission();
   //Read 3Byte
-  Wire.requestFrom(_addr, 3);
+  Wire.requestFrom(_addr, (uint8_t)3);
   if(Wire.available() > 2)
   {
     data = Wire.read()<<8;

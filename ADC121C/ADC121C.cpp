@@ -27,7 +27,7 @@ float ADC121CSensor::read()
     Wire.write(0x00);
     Wire.endTransmission();
 
-    Wire.requestFrom(_addr, 2);
+    Wire.requestFrom(_addr, (uint8_t)2);
     if(Wire.available() == 2)
     {
       data = (Wire.read()&0x0F)<<8;
