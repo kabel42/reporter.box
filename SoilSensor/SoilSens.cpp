@@ -46,13 +46,13 @@ int SoilSensor::read(char* status)
     int size = 0;
 
     data = read();
-    publishData(_addr, "SOI", (float)data, (float)data, "SOILCAP");
+    publishData(_addr, "SOI", (float)data, offset, scale, "SOILCAP");
     return 0;
   }
   return -1;
 }
 
-SoilSensor::getCal(char *id)
+bool SoilSensor::getCal(char *id)
 {
   return false; //TODO
 }

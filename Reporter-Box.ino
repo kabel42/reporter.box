@@ -95,7 +95,7 @@ void i2cTest()
 //Relay
 Relay *relay;
 
-Sensor* getSensorById(int id) {
+class Sensor * getSensorById(int id) {
   for(Sensor *S: sensorList)
   {
     if(S)
@@ -112,7 +112,7 @@ Sensor* getSensorById(int id) {
   return NULL;
 }
 
-int calibrateSensor(char *id)
+void calibrateSensor(char *id)
 {
   //Stop normal updates
   publishTimer.stop();

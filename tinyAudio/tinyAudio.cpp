@@ -23,7 +23,7 @@ AudioSensor::AudioSensor(int addr, int delaytime=1000)
 
 float readEnv(uint8_t _addr)
 {
-  float data;
+  float data = nanf("NA");
   Wire.beginTransmission(_addr);
   Wire.write(0x01);
   Wire.endTransmission();
@@ -40,7 +40,7 @@ float readEnv(uint8_t _addr)
 
 float readGate(uint8_t _addr)
 {
-  float data;
+  float data = nanf("NA");
   Wire.beginTransmission(_addr);
 
   Wire.write(0x02);
@@ -72,8 +72,8 @@ int AudioSensor::read(char* status)
     char* ptr = status;
     int size = 0;
 
-    publishData(_addr, "ENV", (float)readEnv(_addr), 0, "ENVALOPE");
-    publishData(_addr, "GAT", (float)readGate(_addr), 0, "GATE");
+    publishData(_addr, "ENV", (float)readEnv(_addr), offset, scale, "ENVALOPE");
+    publishData(_addr, "GAT", (float)readGate(_addr), offset, scale, "GATE");
 
     return 0;
   }
@@ -101,7 +101,7 @@ void AudioSensor::poll()
         {
           lastDataMillis = millis();
 
-          publishData(_addr, "GAT", (float)data, (float)data, "GATE");
+          publishData(_addr, "GAT", (float)data, offset, scale, "GATE");
 
           Wire.beginTransmission(_addr);
 
@@ -113,7 +113,7 @@ void AudioSensor::poll()
           {
             data = Wire.read()<<8;
             data += Wire.read();
-            publishData(_addr, "ENV", (float)data, (float)data, "ENVALOPE");
+            publishData(_addr, "ENV", (float)data, offset, scale, "ENVALOPE");
           }
         }
       }
@@ -121,7 +121,7 @@ void AudioSensor::poll()
   }
 }
 
-AudioSensor::getCal(char *id)
+bool AudioSensor::getCal(char *id)
 {
   return false; //TODO
 }

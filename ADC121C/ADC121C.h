@@ -10,11 +10,13 @@ class ADC121CSensor: public Sensor
 public:
   int data;
   const enum SensorType sensType = Analog;
+  float offset = 0;
+  float scale  = 0;
 
   ADC121CSensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 
 class MQ131Sensor: public ADC121CSensor
@@ -28,7 +30,7 @@ public:
     }
   };
   int read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 
 class MQ4Sensor: public ADC121CSensor
@@ -42,7 +44,7 @@ public:
     }
   };
   int read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 
 class MQ135Sensor: public ADC121CSensor
@@ -56,6 +58,6 @@ public:
     }
   };
   int read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 #endif
