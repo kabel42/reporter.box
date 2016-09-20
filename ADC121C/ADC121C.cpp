@@ -52,10 +52,10 @@ int ADC121CSensor::read(char* status)
   return -1;
 }
 
-/*_Bool ADC121C::getCal(char *id)
+bool ADC121C::getCal(char *id)
 {
-  return false; //TODO
-}*/
+  return false;
+}
 
 int MQ131Sensor::read(char* status)
 {

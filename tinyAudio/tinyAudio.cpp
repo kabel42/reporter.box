@@ -120,7 +120,7 @@ void AudioSensor::poll()
   }
 }
 
-AudioSensor::getCal(char *id)
+bool AudioSensor::getCal(char *id)
 {
   return false; //TODO
 }

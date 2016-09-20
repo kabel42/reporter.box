@@ -25,12 +25,12 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
 class Sensor {
 public:
   uint8_t _addr = 0;
-  _Bool initOK = false;
+  bool initOK = false;
   const enum SensorType sensType = None;
 
   virtual float read(void)    = 0;
   virtual int   read(char*)   = 0;
-//  virtual _Bool getCal(char*) = 0;
+//  virtual bool getCal(char*) = 0;
 };
 
 class NULLSensor: public Sensor
@@ -42,7 +42,7 @@ public:
   NULLSensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool getCal(char*);
+  bool getCal(char*);
 };
 
 class VCNL4010Sensor: public Sensor
@@ -54,7 +54,7 @@ public:
   VCNL4010Sensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 
 class AnalogSensor: public Sensor
@@ -65,7 +65,7 @@ public:
   AnalogSensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 
 class AM2315Sensor: public Sensor
@@ -77,7 +77,7 @@ public:
   AM2315Sensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 
 class ISL29125Sensor: public Sensor
@@ -89,6 +89,6 @@ public:
   ISL29125Sensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 #endif

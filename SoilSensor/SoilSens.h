@@ -14,6 +14,6 @@ public:
   SoilSensor(int addr=0);
   float read(void);
   int   read(char*);
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 #endif

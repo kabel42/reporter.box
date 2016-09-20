@@ -22,7 +22,7 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   if(isfinite(raw))
   {
     snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
-    data = (raw*scale)+offset;
+    float data = (raw*scale)+offset;
     if(data<1)
     {
       data = 1;
@@ -97,7 +97,7 @@ int VCNL4010Sensor::read(char* status)
   return -1;
 }
 
-VCNL4010Sensor::getCal(char *id)
+bool VCNL4010Sensor::getCal(char *id)
 {
   if(id == "AMB")
   {
@@ -172,7 +172,7 @@ int AM2315Sensor::read(char* status)
   return -1;
 }
 
-AM2315Sensor::getCal(char *id)
+bool AM2315Sensor::getCal(char *id)
 {
   return false; //TODO
 }
@@ -222,7 +222,7 @@ int ISL29125Sensor::read(char* status)
   return -1;
 }
 
-ISL29125Sensor::getCal(char *id)
+bool ISL29125Sensor::getCal(char *id)
 {
   return false; //TODO
 }

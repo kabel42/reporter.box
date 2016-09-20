@@ -18,6 +18,6 @@ public:
   float read(void);
   int   read(char*);
   void  poll();
-  _Bool  getCal(char*);
+  bool  getCal(char*);
 };
 #endif
