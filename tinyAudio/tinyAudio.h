@@ -17,6 +17,7 @@ public:
   AudioSensor(int addr, int delaytime);
   float read(void);
   int   read(char*);
-  void poll();
+  void  poll();
+  _Bool  getCal(char*);
 };
 #endif

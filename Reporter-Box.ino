@@ -2,16 +2,17 @@
 #include <algorithm>    // std::for_each
 #include <vector>       // std::vector
 
+#include "Sensor.h"
+
 #include "SparkFunMicroOLED.h"
 
-#include "Sensor.h"
 #include "HTU20D.h"
 #include "ADC121C.h"
 #include "tinyAudio.h"
 #include "SoilSens.h"
 #include "Relay.h"
 
-std::vector<Sensor*> sensorList;
+std::vector<Sensor *> sensorList;
 
 char data[255];
 int delaytime = 60000;
@@ -75,6 +76,40 @@ AudioSensor *audioSens;
 
 //Relay
 Relay *relay;
+
+Sensor* getSensorById(int id) {
+  for(Sensor *S: sensorList)
+  {
+    if(S)
+    {
+      if(S->initOK)
+      {
+        if(S->_addr == id)
+        {
+          return S;
+        }
+      }
+    }
+  }
+  return NULL;
+}
+
+int calibrateSensor(char *id)
+{
+  //Stop normal updates
+  publishTimer.stop();
+
+  //get I2C Address
+  int addr = id[0];
+  Sensor *S = getSensorById(addr);
+
+  if(S)
+  {
+    //S->getCal(id); TODO
+  }
+
+  publishTimer.start();
+}
 
 void setup()
 {
