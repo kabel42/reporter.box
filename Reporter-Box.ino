@@ -17,7 +17,7 @@ std::vector<Sensor *> sensorList;
 char data[255];
 int delaytime = 60000;
 
-MicroOLED oled(MODE_I2C, D7, 0);
+MicroOLED oled(MODE_I2C, D7, 1);
 
 enum dsplStatus
 {
@@ -74,6 +74,24 @@ Timer publishTimer(delaytime, publishDataTimed);
 //Audio
 AudioSensor *audioSens;
 
+void i2cTest()
+{
+  for(uint8_t i=1; i<128; i++)
+  {
+    Wire.beginTransmission(i);
+    delay(10);
+    int error = Wire.endTransmission();
+    delay(10);
+
+    if(error == 0)
+    {
+      snprintf(data, 250, "0x%X", i);
+      Particle.publish("I2C", data);
+      delay(1000);
+    }
+  }
+}
+
 //Relay
 Relay *relay;
 
@@ -126,6 +144,9 @@ void setup()
   audioSens = new AudioSensor(0, delaytime);
 
   setupOled();
+
+  //debug I2C
+  i2cTest();
 
   //FIX AM2315
   Wire.beginTransmission(AM2315_I2CADDR);
