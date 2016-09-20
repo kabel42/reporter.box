@@ -16,7 +16,7 @@ HTU20DSensor::HTU20DSensor(int addr)
   }
 }
 
-int readTemp()
+int readTemp(uint8_t _addr)
 {
   int data;
   Wire.beginTransmission(_addr);
@@ -34,7 +34,7 @@ int readTemp()
   return data;
 }
 
-int readHum()
+int readHum(uint8_t _addr)
 {
   int data;
   Wire.beginTransmission(_addr);
@@ -56,7 +56,7 @@ float HTU20DSensor::read()
 {
   if(initOK)
   {
-    return readTemp();
+    return readTemp(_addr);
   }
   return nanf("NA");
 }
@@ -68,11 +68,11 @@ int HTU20DSensor::read(char* status)
     char* ptr = status;
     int size = 0;
 
-    data = readTemp();
-    publishData(_addr, "TMP", (float)data, (-46.85+175.72*(float)data/(2l<<15)), "HTU20D");
+    data = readTemp(_addr);
+    publishData(_addr, "TMP", (-46.85+175.72*(float)data/(2l<<15)), 0, "HTU20D");
 
-    data = readHum();
-    publishData(_addr, "RH", (float)data, (-6+125*(float)data/(2l<<15)), "HTU20D");
+    data = readHum(_addr);
+    publishData(_addr, "RH", (-6+125*(float)data/(2l<<15)), 0, "HTU20D");
 
     return 0;
   }

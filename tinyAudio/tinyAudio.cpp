@@ -21,8 +21,9 @@ AudioSensor::AudioSensor(int addr, int delaytime=1000)
   }
 }
 
-float readEnv()
+float readEnv(uint8_t _addr)
 {
+  float data;
   Wire.beginTransmission(_addr);
   Wire.write(0x01);
   Wire.endTransmission();
@@ -37,8 +38,9 @@ float readEnv()
   return data;
 }
 
-float readGate()
+float readGate(uint8_t _addr)
 {
+  float data;
   Wire.beginTransmission(_addr);
 
   Wire.write(0x02);
@@ -58,7 +60,7 @@ float AudioSensor::read()
 {
   if(initOK)
   {
-    return readEnv();
+    return readEnv(_addr);
   }
   return nanf("NA");
 }
@@ -70,8 +72,8 @@ int AudioSensor::read(char* status)
     char* ptr = status;
     int size = 0;
 
-    publishData(_addr, "ENV", (float)readEnv(), (float)data, "ENVALOPE");
-    publishData(_addr, "GAT", (float)readGate(), (float)data, "GATE");
+    publishData(_addr, "ENV", (float)readEnv(_addr), 0, "ENVALOPE");
+    publishData(_addr, "GAT", (float)readGate(_addr), 0, "GATE");
 
     return 0;
   }
