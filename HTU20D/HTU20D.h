@@ -11,6 +11,8 @@ public:
   int data;
   uint8_t _addr = HTU20DADDRESS;
   const enum SensorType sensType = TMP;
+  float offset = 0;
+  float scale  = 0;
 
   HTU20DSensor(int addr=0);
   float read(void);

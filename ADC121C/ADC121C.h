@@ -10,6 +10,8 @@ class ADC121CSensor: public Sensor
 public:
   int data;
   const enum SensorType sensType = Analog;
+  float offset = 0;
+  float scale  = 0;
 
   ADC121CSensor(int addr=0);
   float read(void);

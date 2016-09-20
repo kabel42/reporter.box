@@ -90,8 +90,8 @@ int VCNL4010Sensor::read(char* status)
 {
   if(initOK)
   {
-    publishData(VCNL4010_ADRESS, "AMB", drv.readAmbient(), nanf("TBD"), "VCNL4010");
-    publishData(VCNL4010_ADRESS, "PRX", drv.readProximity(), nanf("TBD"), "VCNL4010");
+    publishData(VCNL4010_ADRESS, "AMB", drv.readAmbient(), offsetAMB, scaleAMB, "VCNL4010");
+    publishData(VCNL4010_ADRESS, "PRX", drv.readProximity(), offsetPRX, scalePRX, "VCNL4010");
     return 0;
   }
   return -1;
@@ -165,8 +165,8 @@ int AM2315Sensor::read(char* status)
   if(initOK)
   {
     //sprintf(status, "AMB#%i#?##DIST#%i#?", drv.readAmbient(), drv.readProximity());
-    publishData(_addr, "TMP", drv.readTemperature(), nanf("TBD"), "AM2315");
-    publishData(_addr, "RH", drv.readHumidity(), nanf("TBD"), "AM2315");
+    publishData(_addr, "TMP", drv.readTemperature(), offsetTMP, scaleTMP, "AM2315");
+    publishData(_addr, "RH", drv.readHumidity(), offsetRH, scaleRH, "AM2315");
     return 0;
   }
   return -1;
@@ -214,9 +214,9 @@ int ISL29125Sensor::read(char* status)
     float green = drv.readGreen();
     float blue  = drv.readBlue();
     float mul   = 10./65535.;
-    publishData(_addr, "Red", red, red*mul, "ISE29125");
-    publishData(_addr, "Green", green, green*mul, "ISE29125");
-    publishData(_addr, "Blue", blue, blue*mul, "ISE29125");
+    publishData(_addr, "R", red*mul, offsetR, scaleR, "ISE29125");
+    publishData(_addr, "G", green*mul, offsetG, scaleG, "ISE29125");
+    publishData(_addr, "B", blue*mul, offsetB, scaleB, "ISE29125");
     return 0;
   }
   return -1;

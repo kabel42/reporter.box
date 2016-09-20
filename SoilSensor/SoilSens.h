@@ -10,6 +10,8 @@ class SoilSensor: public Sensor
 public:
   const enum SensorType sensType = Soil;
   int data;
+  float offset = 0;
+  float scale  = 0;
 
   SoilSensor(int addr=0);
   float read(void);
