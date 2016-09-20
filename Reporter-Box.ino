@@ -9,6 +9,7 @@
 #include "ADC121C.h"
 #include "tinyAudio.h"
 #include "SoilSens.h"
+#include "Relay.h"
 
 std::vector<Sensor*> sensorList;
 
@@ -90,6 +91,9 @@ void i2cTest()
   }
 }
 
+//Relay
+Relay *relay;
+
 void setup()
 {
   //Get Device Name
@@ -130,6 +134,8 @@ void setup()
   pinMode(A3, INPUT_PULLDOWN); //RED Button
   pinMode(A4, INPUT_PULLDOWN); //Black Button
 
+  //Relay
+  relay = new Relay();
 }
 
 void loop()

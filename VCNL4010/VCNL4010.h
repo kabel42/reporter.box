@@ -7,9 +7,6 @@
 #include "spark_wiring.h"
 #include "spark_wiring_i2c.h"
 
-#endif
-
-
 #define VCNL4010_DEBUG 0
 
 // the i2c address
@@ -61,3 +58,5 @@ class VCNL4010 {
 
   uint8_t _i2caddr;
 };
+
+#endif
