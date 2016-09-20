@@ -26,7 +26,7 @@ float SoilSensor::read()
     Wire.write(0x00);
     Wire.endTransmission();
 
-    Wire.requestFrom(_addr, 2);
+    Wire.requestFrom(_addr, (uint8_t)2);
     if(Wire.available() > 1)
     {
       data = Wire.read()<<8;
@@ -45,18 +45,8 @@ int SoilSensor::read(char* status)
     char* ptr = status;
     int size = 0;
 
-    Wire.beginTransmission(_addr);
-
-    Wire.write(0x00);
-    Wire.endTransmission();
-
-    Wire.requestFrom(_addr, 2);
-    if(Wire.available() > 1)
-    {
-      data = Wire.read()<<8;
-      data += Wire.read();
-      publishData(_addr, "SOI", (float)data, (float)data, "SOILCAP");
-    }
+    data = read();
+    publishData(_addr, "SOI", (float)data, (float)data, "SOILCAP");
     return 0;
   }
   return -1;
