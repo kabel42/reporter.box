@@ -213,6 +213,12 @@ void loop()
       if(&devName != NULL)
         oled.println(devName);
       oled.println("Running...");
+      #if Wiring_WiFi
+      oled.println("on WiFi");
+      #endif
+      #if Wiring_Cellular
+      oled.println("on Cellular");
+      #endif
       break;
     default:
       oled.println("???");
