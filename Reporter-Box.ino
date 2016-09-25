@@ -135,7 +135,9 @@ int calibrateSensor(String idIn)
     oled.clear(PAGE);
     oled.setCursor(0, 0);  // Set the text cursor to the upper-left of the screen.
     oled.println("Calibrating...");
-    oled.println(id);
+    char pubstring[15];
+    snprintf(pubstring, 15, " 0x%X %s", id[0], &id[1]);
+    oled.println(pubstring);
     oled.display();
 
     ret = S->getCal(id);
