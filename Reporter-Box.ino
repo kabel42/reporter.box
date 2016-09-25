@@ -112,10 +112,17 @@ class Sensor * getSensorById(int id) {
   return NULL;
 }
 
-void calibrateSensor(char *id)
+void calibrateSensor(char *idIn)
 {
   //Stop normal updates
   publishTimer.stop();
+
+  long lId = atol(idIn);
+  char id[5];
+  id[0] = (lId >> 24) & 0xFF;
+  id[1] = (lId >> 16) & 0xFF;
+  id[2] = (lId >>  8) & 0xFF;
+  id[3] = (lId >>  0) & 0xFF;
 
   //get I2C Address
   int addr = id[0];
