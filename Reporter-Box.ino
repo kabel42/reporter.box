@@ -2,16 +2,17 @@
 #include <algorithm>    // std::for_each
 #include <vector>       // std::vector
 
+#include "Sensor.h"
+
 #include "SparkFunMicroOLED.h"
 
-#include "Sensor.h"
 #include "HTU20D.h"
 #include "ADC121C.h"
 #include "tinyAudio.h"
 #include "SoilSens.h"
 #include "Relay.h"
 
-std::vector<Sensor*> sensorList;
+std::vector<Sensor *> sensorList;
 
 char data[255];
 int delaytime = 60000;
@@ -94,6 +95,51 @@ void i2cTest()
 //Relay
 Relay *relay;
 
+class Sensor * getSensorById(int id) {
+  for(Sensor *S: sensorList)
+  {
+    if(S)
+    {
+      if(S->initOK)
+      {
+        if(S->_addr == id)
+        {
+          return S;
+        }
+      }
+    }
+  }
+  return NULL;
+}
+
+int calibrateSensor(String idIn)
+{
+  //Stop normal updates
+  publishTimer.stop();
+
+  long lId = idIn.toInt();
+  char id[5];
+  id[0] = (lId >> 24) & 0xFF;
+  id[1] = (lId >> 16) & 0xFF;
+  id[2] = (lId >>  8) & 0xFF;
+  id[3] = (lId >>  0) & 0xFF;
+  id[4] = 0;
+
+  //get I2C Address
+  int addr = id[0];
+  Sensor *S = getSensorById(addr);
+  int ret;
+
+  if(S)
+  {
+    ret = S->getCal(id);
+  }
+
+  publishTimer.start();
+
+  return ret;
+}
+
 void setup()
 {
   //Get Device Name
@@ -136,6 +182,8 @@ void setup()
 
   //Relay
   relay = new Relay();
+
+  Particle.function("calibrate", calibrateSensor);
 }
 
 void loop()

@@ -1,6 +1,6 @@
 #include "Sensor.h"
 
-void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
+void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens)
 {
   static char pubstring[252];
   //snprintf(pubstring, 250, "{\"uncalibrated_value\": %f, \"calibrated_value\": %f, \"Measurement ID\": \"%s\", \"sensor\": {\"address:\"%d, \"name\":%s}}, ", raw, data, measID, addr, sens);
@@ -22,20 +22,85 @@ void publishData(uint8_t addr, char* measID, float raw, float data, char* sens)
   if(isfinite(raw))
   {
     snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
-  } else {
-    snprintf(rawStr, 34, "");
-  }
-
-  if(isfinite(data))
-  {
+    
+    float data = (raw*scale)+offset;
+    if(data<1)
+    {
+      data = 1;
+    } else if(data>10)
+    {
+      data = 10;
+    }
+    if(scale == 0)
+    {
+      data = 0;
+    }
     snprintf(dataStr, 34, "\"calibrated_value\": %.2f,", data);
   } else {
+    snprintf(rawStr, 34, "");
     snprintf(dataStr, 34, "");
   }
+
   snprintf(pubstring, 250, "{%s %s \"sensor\": {\"address\": %li}}", rawStr, dataStr, id);
 
   Particle.publish("measurement", pubstring);
   delay(1000);
+}
+
+void publishCal(char* measID, float min, float max, float offset, float scale)
+{
+  char pubstring[100];
+  //Gen Id from addr and measID
+  uint32_t id = 0;
+  int len = strlen(measID);
+  if(len>4)
+    len = 4;
+
+  for(int i = 0; i<len; i++)
+  {
+    id += measID[i]<<(8*(3-i));
+  }
+
+  snprintf(pubstring, 100, "{\"min\": %.2f, \"max\": %.2f, \"sensor\": {\"address\": %li, \"offset\": %.2f, \"scale\": %.2f}}", min, max, id, offset, scale);
+
+  Particle.publish("calibration", pubstring);
+}
+
+bool calLoop(Sensor *S, char *id, float *offset, float *scale)
+{
+  bool ret = false;
+  float min, max;
+
+  float cur = S->getVal(id);
+  min = max = cur;
+
+  unsigned long end = millis() + CALTIME;
+  while((end - millis()) < 0)
+  {
+    cur = S->getVal(id);
+    if(isfinite(cur))
+    {
+      ret = true;
+      if(cur < min) {
+        min = cur;
+      } else if(cur > max) {
+        max = cur;
+      }
+    }
+    delay(1);
+  }
+
+  *offset = (-min)+1;
+  *scale = 10/(max-min);
+
+  publishCal(id, min, max, *offset, *scale);
+
+  return ret;
+}
+
+float Sensor::getVal(char *id)
+{
+  return read();
 }
 
 NULLSensor::NULLSensor(int addr)
@@ -50,7 +115,12 @@ int NULLSensor::read(char* status)
 
 float NULLSensor::read()
 {
-  return _addr;
+  return nanf("NA");
+}
+
+bool NULLSensor::getCal(char *id)
+{
+  return false;
 }
 
 VCNL4010Sensor::VCNL4010Sensor(int addr): drv()
@@ -86,12 +156,33 @@ int VCNL4010Sensor::read(char* status)
 {
   if(initOK)
   {
-    //sprintf(status, "AMB#%i#?##DIST#%i#?", drv.readAmbient(), drv.readProximity());
-    publishData(VCNL4010_ADRESS, "AMB", drv.readAmbient(), nanf("TBD"), "VCNL4010");
-    publishData(VCNL4010_ADRESS, "PRX", drv.readProximity(), nanf("TBD"), "VCNL4010");
+    publishData(VCNL4010_ADRESS, "AMB", drv.readAmbient(), offsetAMB, scaleAMB, "VCNL4010");
+    publishData(VCNL4010_ADRESS, "PRX", drv.readProximity(), offsetPRX, scalePRX, "VCNL4010");
     return 0;
   }
   return -1;
+}
+
+bool VCNL4010Sensor::getCal(char *id)
+{
+  if(id[1] == 'A' && id[2] == 'M' && id[3] == 'B') {
+    return calLoop(this, id, &offsetAMB, &scaleAMB);
+  } else if(id[1] == 'P' && id[2] == 'R' && id[3] == 'X') {
+    return calLoop(this, id, &offsetPRX, &scalePRX);
+  } else {
+    return false;
+  }
+}
+
+float VCNL4010Sensor::getVal(char *id)
+{
+  if(id[1] == 'A' && id[2] == 'M' && id[3] == 'B') {
+    return drv.readAmbient();
+  } else if(id[1] == 'P' && id[2] == 'R' && id[3] == 'X') {
+    return drv.readProximity();
+  } else {
+    return nanf("NA");
+  }
 }
 
 AnalogSensor::AnalogSensor(int addr)
@@ -153,12 +244,35 @@ int AM2315Sensor::read(char* status)
   if(initOK)
   {
     //sprintf(status, "AMB#%i#?##DIST#%i#?", drv.readAmbient(), drv.readProximity());
-    publishData(_addr, "TMP", drv.readTemperature(), nanf("TBD"), "AM2315");
-    publishData(_addr, "RH", drv.readHumidity(), nanf("TBD"), "AM2315");
+    publishData(_addr, "TMP", drv.readTemperature(), offsetTMP, scaleTMP, "AM2315");
+    publishData(_addr, "RH", drv.readHumidity(), offsetRH, scaleRH, "AM2315");
     return 0;
   }
   return -1;
 }
+
+float AM2315Sensor::getVal(char *id)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+    return drv.readHumidity();
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    return drv.readTemperature();
+  } else {
+    return nanf("NA");
+  }
+}
+
+bool AM2315Sensor::getCal(char *id)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+    return calLoop(this, id, &offsetRH, &scaleRH);
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    return calLoop(this, id, &offsetTMP, &scaleTMP);
+  } else {
+    return false;
+  }
+}
+
 
 ISL29125Sensor::ISL29125Sensor(int addr): drv()
 {
@@ -183,7 +297,6 @@ float ISL29125Sensor::read()
 {
   if(initOK)
   {
-    //return drv.readAmbient();
     return drv.readRed()+drv.readBlue()+drv.readGreen();
   }
   return nanf("NA");
@@ -197,10 +310,36 @@ int ISL29125Sensor::read(char* status)
     float green = drv.readGreen();
     float blue  = drv.readBlue();
     float mul   = 10./65535.;
-    publishData(_addr, "Red", red, red*mul, "ISE29125");
-    publishData(_addr, "Green", green, green*mul, "ISE29125");
-    publishData(_addr, "Blue", blue, blue*mul, "ISE29125");
+    publishData(_addr, "R", red, offsetR, scaleR, "ISE29125");
+    publishData(_addr, "G", green, offsetG, scaleG, "ISE29125");
+    publishData(_addr, "B", blue, offsetB, scaleB, "ISE29125");
     return 0;
   }
   return -1;
+}
+
+float ISL29125Sensor::getVal(char *id)
+{
+  if(id[1] == 'R') {
+    return drv.readRed();
+  } else if(id[1] == 'G') {
+    return drv.readGreen();
+  } else if(id[1] == 'B') {
+    return drv.readGreen();
+  } else {
+    return nanf("NA");
+  }
+}
+
+bool ISL29125Sensor::getCal(char *id)
+{
+  if(id[1] == 'R') {
+    return calLoop(this, id, &offsetR, &scaleR);
+  } else if(id[1] == 'G') {
+    return calLoop(this, id, &offsetG, &scaleG);
+  } else if(id[1] == 'B') {
+    return calLoop(this, id, &offsetB, &scaleB);
+  } else {
+    return false;
+  }
 }

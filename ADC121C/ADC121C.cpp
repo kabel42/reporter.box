@@ -45,11 +45,16 @@ int ADC121CSensor::read(char* status)
   {
     data = read();
 
-    publishData(_addr, "ADC", data, ((9.95 / 4096.0) * data + 0.05), "AD121C");
+    publishData(_addr, "ADC", data, offset, scale, "AD121C");
 
     return 0;
   }
   return -1;
+}
+
+bool ADC121CSensor::getCal(char *id)
+{
+  return calLoop(this, id, &offset, &scale);
 }
 
 int MQ131Sensor::read(char* status)
@@ -58,11 +63,16 @@ int MQ131Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "OZO", data, ((100 / 4096.0) * data), "MQ131");
+    publishData(_addr, "OZO", data, offset, scale, "MQ131");
 
     return 0;
   }
   return -1;
+}
+
+bool MQ131Sensor::getCal(char *id)
+{
+  return calLoop(this, id, &offset, &scale);
 }
 
 int MQ4Sensor::read(char* status)
@@ -71,11 +81,16 @@ int MQ4Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "MET", data, ((100 / 4096.0) * data), "MQ4");
+    publishData(_addr, "MET", data, offset, scale, "MQ4");
 
     return 0;
   }
   return -1;
+}
+
+bool MQ4Sensor::getCal(char *id)
+{
+  return calLoop(this, id, &offset, &scale);
 }
 
 int MQ135Sensor::read(char* status)
@@ -84,9 +99,14 @@ int MQ135Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "NH3", data, ((100 / 4096.0) * data), "MQ135");
+    publishData(_addr, "NH3", data, offset, scale, "MQ135");
 
     return 0;
   }
   return -1;
+}
+
+bool MQ135Sensor::getCal(char *id)
+{
+  return calLoop(this, id, &offset, &scale);
 }

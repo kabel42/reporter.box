@@ -9,6 +9,8 @@
 #include "Adafruit_AM2315.h"
 #include "SparkFunISL29125.h"
 
+#define CALTIME 60000
+
 enum SensorType
 {
   None = 0,
@@ -20,17 +22,22 @@ enum SensorType
   Soil,
 };
 
-void publishData(uint8_t addr, char* measID, float raw, float data, char* sens);
-
 class Sensor {
 public:
   uint8_t _addr = 0;
-  _Bool initOK = false;
+  bool initOK = false;
   const enum SensorType sensType = None;
 
-  virtual float read(void)  = 0;
-  virtual int   read(char*) = 0;
+  virtual float read(void)    = 0;
+  virtual int   read(char*)   = 0;
+  virtual bool  getCal(char*) = 0;
+  virtual float getVal(char*);
 };
+
+void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens);
+void publishCal(char* measId, float min, float max, float offset, float scale);
+
+bool calLoop(Sensor *S, char *id, float *min, float *max);
 
 class NULLSensor: public Sensor
 {
@@ -41,6 +48,8 @@ public:
   NULLSensor(int addr=0);
   float read(void);
   int   read(char*);
+  bool  getCal(char*);
+  float getVal(char*);
 };
 
 class VCNL4010Sensor: public Sensor
@@ -48,20 +57,29 @@ class VCNL4010Sensor: public Sensor
 public:
   VCNL4010 drv;
   const enum SensorType sensType = Light;
+  float offsetAMB = 0;
+  float scaleAMB  = 0;
+  float offsetPRX = 0;
+  float scalePRX  = 0;
 
   VCNL4010Sensor(int addr=0);
   float read(void);
   int   read(char*);
+  bool  getCal(char*);
+  float getVal(char*);
 };
 
 class AnalogSensor: public Sensor
 {
 public:
   const enum SensorType sensType = Analog;
+  float offset = 0;
+  float scale  = 0;
 
   AnalogSensor(int addr=0);
   float read(void);
   int   read(char*);
+  bool  getCal(char*);
 };
 
 class AM2315Sensor: public Sensor
@@ -69,10 +87,16 @@ class AM2315Sensor: public Sensor
 public:
   Adafruit_AM2315 drv;
   const enum SensorType sensType = Light;
+  float offsetTMP = 0;
+  float scaleTMP  = 0;
+  float offsetRH = 0;
+  float scaleRH  = 0;
 
   AM2315Sensor(int addr=0);
   float read(void);
   int   read(char*);
+  bool  getCal(char*);
+  float getVal(char*);
 };
 
 class ISL29125Sensor: public Sensor
@@ -80,9 +104,17 @@ class ISL29125Sensor: public Sensor
 public:
   SFE_ISL29125 drv;
   const enum SensorType sensType = Color;
+  float offsetR = 0;
+  float scaleR  = 0;
+  float offsetG = 0;
+  float scaleG  = 0;
+  float offsetB = 0;
+  float scaleB  = 0;
 
   ISL29125Sensor(int addr=0);
   float read(void);
   int   read(char*);
+  bool  getCal(char*);
+  float getVal(char*);
 };
 #endif
