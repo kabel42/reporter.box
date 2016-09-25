@@ -74,8 +74,8 @@ bool calLoop(Sensor *S, char *id, float *offset, float *scale)
   float cur = S->getVal(id);
   min = max = cur;
 
-  unsigned long end = millis() + CALTIME;
-  while((end - millis()) > 0)
+  long end = millis() + CALTIME;
+  while((long)(end - millis()) > 0)
   {
     cur = S->getVal(id);
     if(isfinite(cur))
