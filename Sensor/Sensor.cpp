@@ -42,6 +42,15 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   delay(1000);
 }
 
+publishCal(char* id, float offset, float scale)
+{
+  char pubstring[100];
+
+  snfrintf(pubstring, 100, "{\"sensor\": {\"address\": %li, \"offset\": %.2f, \"scale\": %.2f}}")
+
+  Particle.publish("calibration", pubstring);
+}
+
 bool calLoop(Sensor *S, char *id, float *min, float *max)
 {
   bool ret = false;
