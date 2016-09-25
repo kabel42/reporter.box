@@ -69,20 +69,34 @@ int HTU20DSensor::read(char* status)
     int size = 0;
 
     data = readTemp(_addr);
-    publishData(_addr, "TMP", (-46.85+175.72*(float)data/(2l<<15)), offset, scale, "HTU20D");
+    publishData(_addr, "TMP", (-46.85+175.72*(float)data/(2l<<15)), offsetTMP, scaleTMP, "HTU20D");
 
     data = readHum(_addr);
-    publishData(_addr, "RH", (-6+125*(float)data/(2l<<15)), offset, scale, "HTU20D");
+    publishData(_addr, "RH", (-6+125*(float)data/(2l<<15)), offsetRH, scaleRH, "HTU20D");
 
     return 0;
   }
   return -1;
 }
 
+float HTU20DSensor::getVal(char *id)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+    return readHum(_addr);
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    return readTemp(_addr);
+  } else {
+    return nanf("NA");
+  }
+}
+
 bool HTU20DSensor::getCal(char *id)
 {
   if(id[1] == 'R' && id[2] == 'H') {
-
+    return calLoop(this, id, &offsetRH, &scaleRH);
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    return calLoop(this, id, &offsetTMP, &scaleTMP);
+  } else {
+    return false;
   }
-  return false; //TODO
 }

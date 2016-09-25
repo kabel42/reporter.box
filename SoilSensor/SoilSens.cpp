@@ -54,5 +54,5 @@ int SoilSensor::read(char* status)
 
 bool SoilSensor::getCal(char *id)
 {
-  return false; //TODO
+  return calLoop(this, id, &offset, &scale);
 }

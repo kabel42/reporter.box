@@ -42,25 +42,30 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   delay(1000);
 }
 
-bool calLoop(float(*fkt)(void), float min, float max)
+bool calLoop(Sensor *S, char *id, float *min, float *max)
 {
   bool ret = false;
   unsigned long end = millis() + CALTIME;
   while((end - millis()) < 0)
   {
-    float cur = fkt();
+    float cur = S->getVal(id);
     if(isfinite(cur))
     {
       ret = true;
-      if(cur < min) {
-        min = cur;
-      } else if(cur > max) {
-        max = cur;
+      if(cur < *min) {
+        *min = cur;
+      } else if(cur > *max) {
+        *max = cur;
       }
     }
     delay(1);
   }
   return ret;
+}
+
+float Sensor::getVal(char *id)
+{
+  return read();
 }
 
 NULLSensor::NULLSensor(int addr)
@@ -75,7 +80,12 @@ int NULLSensor::read(char* status)
 
 float NULLSensor::read()
 {
-  return _addr;
+  return nanf("NA");
+}
+
+bool NULLSensor::getCal(char *id)
+{
+  return false;
 }
 
 VCNL4010Sensor::VCNL4010Sensor(int addr): drv()
@@ -120,11 +130,24 @@ int VCNL4010Sensor::read(char* status)
 
 bool VCNL4010Sensor::getCal(char *id)
 {
-  if(id == "AMB")
-  {
-
+  if(id[1] == 'A' && id[2] == 'M' && id[3] == 'B') {
+    return calLoop(this, id, &offsetAMB, &scaleAMB);
+  } else if(id[1] == 'P' && id[2] == 'R' && id[3] == 'X') {
+    return calLoop(this, id, &offsetPRX, &scalePRX);
+  } else {
+    return false;
   }
-  return false; //TODO
+}
+
+float VCNL4010Sensor::getVal(char *id)
+{
+  if(id[1] == 'A' && id[2] == 'M' && id[3] == 'B') {
+    return drv.readAmbient();
+  } else if(id[1] == 'P' && id[2] == 'R' && id[3] == 'X') {
+    return drv.readProximity();
+  } else {
+    return nanf("NA");
+  }
 }
 
 AnalogSensor::AnalogSensor(int addr)
@@ -193,10 +216,28 @@ int AM2315Sensor::read(char* status)
   return -1;
 }
 
+float AM2315Sensor::getVal(char *id)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+    return drv.readHumidity();
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    return drv.readTemperature();
+  } else {
+    return nanf("NA");
+  }
+}
+
 bool AM2315Sensor::getCal(char *id)
 {
-  return false; //TODO
+  if(id[1] == 'R' && id[2] == 'H') {
+    return calLoop(this, id, &offsetRH, &scaleRH);
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    return calLoop(this, id, &offsetTMP, &scaleTMP);
+  } else {
+    return false;
+  }
 }
+
 
 ISL29125Sensor::ISL29125Sensor(int addr): drv()
 {
@@ -221,7 +262,6 @@ float ISL29125Sensor::read()
 {
   if(initOK)
   {
-    //return drv.readAmbient();
     return drv.readRed()+drv.readBlue()+drv.readGreen();
   }
   return nanf("NA");
@@ -235,15 +275,36 @@ int ISL29125Sensor::read(char* status)
     float green = drv.readGreen();
     float blue  = drv.readBlue();
     float mul   = 10./65535.;
-    publishData(_addr, "R", red*mul, offsetR, scaleR, "ISE29125");
-    publishData(_addr, "G", green*mul, offsetG, scaleG, "ISE29125");
-    publishData(_addr, "B", blue*mul, offsetB, scaleB, "ISE29125");
+    publishData(_addr, "R", red, offsetR, scaleR, "ISE29125");
+    publishData(_addr, "G", green, offsetG, scaleG, "ISE29125");
+    publishData(_addr, "B", blue, offsetB, scaleB, "ISE29125");
     return 0;
   }
   return -1;
 }
 
+float ISL29125Sensor::getVal(char *id)
+{
+  if(id[1] == 'R') {
+    return drv.readRed();
+  } else if(id[1] == 'G') {
+    return drv.readGreen();
+  } else if(id[1] == 'B') {
+    return drv.readGreen();
+  } else {
+    return nanf("NA");
+  }
+}
+
 bool ISL29125Sensor::getCal(char *id)
 {
-  return false; //TODO
+  if(id[1] == 'R') {
+    return calLoop(this, id, &offsetR, &scaleR);
+  } else if(id[1] == 'G') {
+    return calLoop(this, id, &offsetG, &scaleG);
+  } else if(id[1] == 'B') {
+    return calLoop(this, id, &offsetB, &scaleB);
+  } else {
+    return false;
+  }
 }

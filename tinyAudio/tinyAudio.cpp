@@ -101,7 +101,7 @@ void AudioSensor::poll()
         {
           lastDataMillis = millis();
 
-          publishData(_addr, "GAT", (float)data, offset, scale, "GATE");
+          publishData(_addr, "GAT", (float)data, 0, 1/1024., "GATE");
 
           Wire.beginTransmission(_addr);
 
@@ -123,5 +123,5 @@ void AudioSensor::poll()
 
 bool AudioSensor::getCal(char *id)
 {
-  return false; //TODO
+  return calLoop(this, id, &offset, &scale);
 }

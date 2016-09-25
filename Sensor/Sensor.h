@@ -22,8 +22,6 @@ enum SensorType
   Soil,
 };
 
-void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens);
-
 class Sensor {
 public:
   uint8_t _addr = 0;
@@ -32,8 +30,13 @@ public:
 
   virtual float read(void)    = 0;
   virtual int   read(char*)   = 0;
-  virtual bool getCal(char*) = 0;
+  virtual bool  getCal(char*) = 0;
+  virtual float getVal(char*);
 };
+
+void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens);
+
+bool calLoop(Sensor *S, char *id, float *min, float *max);
 
 class NULLSensor: public Sensor
 {
@@ -44,7 +47,8 @@ public:
   NULLSensor(int addr=0);
   float read(void);
   int   read(char*);
-  bool getCal(char*);
+  bool  getCal(char*);
+  float getVal(char*);
 };
 
 class VCNL4010Sensor: public Sensor
@@ -61,6 +65,7 @@ public:
   float read(void);
   int   read(char*);
   bool  getCal(char*);
+  float getVal(char*);
 };
 
 class AnalogSensor: public Sensor
@@ -90,6 +95,7 @@ public:
   float read(void);
   int   read(char*);
   bool  getCal(char*);
+  float getVal(char*);
 };
 
 class ISL29125Sensor: public Sensor
@@ -108,5 +114,6 @@ public:
   float read(void);
   int   read(char*);
   bool  getCal(char*);
+  float getVal(char*);
 };
 #endif

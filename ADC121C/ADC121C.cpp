@@ -54,7 +54,7 @@ int ADC121CSensor::read(char* status)
 
 bool ADC121CSensor::getCal(char *id)
 {
-  return false;
+  return calLoop(this, id, &offset, &scale);
 }
 
 int MQ131Sensor::read(char* status)
@@ -72,7 +72,7 @@ int MQ131Sensor::read(char* status)
 
 bool MQ131Sensor::getCal(char *id)
 {
-  return false;
+  return calLoop(this, id, &offset, &scale);
 }
 
 int MQ4Sensor::read(char* status)
@@ -90,7 +90,7 @@ int MQ4Sensor::read(char* status)
 
 bool MQ4Sensor::getCal(char *id)
 {
-  return false;
+  return calLoop(this, id, &offset, &scale);
 }
 
 int MQ135Sensor::read(char* status)
@@ -108,5 +108,5 @@ int MQ135Sensor::read(char* status)
 
 bool MQ135Sensor::getCal(char *id)
 {
-  return false;
+  return calLoop(this, id, &offset, &scale);
 }
