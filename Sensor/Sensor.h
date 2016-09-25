@@ -35,6 +35,7 @@ public:
 };
 
 void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens);
+void publishCal(char* measId, float min, float max, float offset, float scale);
 
 bool calLoop(Sensor *S, char *id, float *min, float *max);
 

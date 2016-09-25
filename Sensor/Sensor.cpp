@@ -42,33 +42,54 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   delay(1000);
 }
 
-publishCal(char* id, float offset, float scale)
+void publishCal(char* measID, float min, float max, float offset, float scale)
 {
   char pubstring[100];
+  //Gen Id from addr and measID
+  uint32_t id = 0;
+  int len = strlen(measID);
+  if(len>4)
+    len = 4;
 
-  snfrintf(pubstring, 100, "{\"sensor\": {\"address\": %li, \"offset\": %.2f, \"scale\": %.2f}}")
+  for(int i = 0; i<len; i++)
+  {
+    id += measID[i]<<(8*(3-i));
+  }
+
+  snprintf(pubstring, 100, "{\"min\": %.2f, \"max\": %.2f, \"sensor\": {\"address\": %li, \"offset\": %.2f, \"scale\": %.2f}}", min, max, id, offset, scale);
 
   Particle.publish("calibration", pubstring);
 }
 
-bool calLoop(Sensor *S, char *id, float *min, float *max)
+bool calLoop(Sensor *S, char *id, float *offset, float *scale)
 {
   bool ret = false;
+  float min, max;
+
+  float cur = S->getVal(id);
+  min = max = cur;
+
   unsigned long end = millis() + CALTIME;
   while((end - millis()) < 0)
   {
-    float cur = S->getVal(id);
+    cur = S->getVal(id);
     if(isfinite(cur))
     {
       ret = true;
-      if(cur < *min) {
-        *min = cur;
-      } else if(cur > *max) {
-        *max = cur;
+      if(cur < min) {
+        min = cur;
+      } else if(cur > max) {
+        max = cur;
       }
     }
     delay(1);
   }
+
+  *offset = (-min)+1;
+  *scale = 10/(max-min);
+
+  publishCal(id, min, max, *offset, *scale);
+
   return ret;
 }
 
