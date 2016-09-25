@@ -24,6 +24,7 @@ enum dsplStatus
   INIT,
   IN,
   OUT,
+  CALIB,
 } dspl;
 
 void setupOled()
@@ -132,6 +133,7 @@ int calibrateSensor(String idIn)
 
   if(S)
   {
+    dspl = CALIB;
     oled.clear(PAGE);
     oled.setCursor(0, 0);  // Set the text cursor to the upper-left of the screen.
     oled.println("Calibrating...");
@@ -212,13 +214,46 @@ void loop()
     case INIT:
       if(&devName != NULL)
         oled.println(devName);
-      oled.println("Running...");
+      oled.println("Running");
       #if Wiring_WiFi
       oled.println("on WiFi");
       #endif
       #if Wiring_Cellular
       oled.println("on Cellular");
       #endif
+
+      if(digitalRead(A3))
+      {
+        dspl = IN;
+      }
+      if(digitalRead(A4))
+      {
+        dspl = OUT;
+      }
+      break;
+    case CALIB:
+      break;
+    case IN:
+      if(!digitalRead(A3))
+      {
+        dspl = INIT;
+      }
+      break;
+    case OUT:
+      oled.print("Out:");
+      for(int i = 1; i<5; i++)
+      {
+        if(relay->getRelay(i))
+        {
+          oled.print("1");
+        } else {
+          oled.print("0");
+        }
+      }
+      if(!digitalRead(A4))
+      {
+        dspl = INIT;
+      }
       break;
     default:
       oled.println("???");

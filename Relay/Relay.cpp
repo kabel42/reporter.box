@@ -20,7 +20,7 @@ Relay::Relay() {
   Particle.function("deactivate", &Relay::deactivateRelay, this);
 }
 
-int Relay::setRelay(long num, bool state)
+int Relay::setRelay(long num, bool newState)
 {
   if (num > 0 && num < 5) {
     if(i2c)
@@ -28,7 +28,7 @@ int Relay::setRelay(long num, bool state)
       //TODO
       return -1;
     } else {
-      digitalWrite(relayPins[num-1], state);
+      digitalWrite(relayPins[num-1], newState);
     }
     return num;
   }
@@ -43,4 +43,17 @@ int Relay::activateRelay(String data)
 int Relay::deactivateRelay(String data)
 {
     return setRelay(data.toInt(), false);
+}
+
+bool Relay::getRelay(int num)
+{
+  if (num > 0 && num < 5) {
+    if(i2c)
+    {
+      //TODO
+      return false; //TODO
+    } else {
+      digitalRead(relayPins[num-1]);
+    }
+  }
 }

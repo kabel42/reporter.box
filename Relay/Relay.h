@@ -12,5 +12,6 @@ public:
   int setRelay(long num, bool state);
   int activateRelay(String data);
   int deactivateRelay(String data);
+  bool getRelay(int num);
 };
 #endif
