@@ -22,7 +22,7 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   if(isfinite(raw))
   {
     snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
-    
+
     float data = (raw*scale)+offset;
     if(data<1)
     {
@@ -75,7 +75,7 @@ bool calLoop(Sensor *S, char *id, float *offset, float *scale)
   min = max = cur;
 
   unsigned long end = millis() + CALTIME;
-  while((end - millis()) < 0)
+  while((end - millis()) > 0)
   {
     cur = S->getVal(id);
     if(isfinite(cur))
