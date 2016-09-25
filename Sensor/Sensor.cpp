@@ -23,18 +23,19 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   {
     snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
 
-    float data = (raw*scale)+offset;
-    if(data<1)
+    float data = 0;
+    if(scale != 0)
     {
-      data = 1;
-    } else if(data>10)
-    {
-      data = 10;
+      data = (raw+offset)*scale+1;
+      if(data<1)
+      {
+        data = 1;
+      } else if(data>10)
+      {
+        data = 10;
+      }
     }
-    if(scale == 0)
-    {
-      data = 0;
-    }
+
     snprintf(dataStr, 34, "\"calibrated_value\": %.2f,", data);
   } else {
     snprintf(rawStr, 34, "");
@@ -90,8 +91,8 @@ bool calLoop(Sensor *S, char *id, float *offset, float *scale)
     delay(1);
   }
 
-  *offset = (-min)+1;
-  *scale = 10/(max-min);
+  *offset = (-min);
+  *scale = 9/(max-min);
 
   publishCal(id, min, max, *offset, *scale);
 
