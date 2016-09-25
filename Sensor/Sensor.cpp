@@ -42,6 +42,27 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   delay(1000);
 }
 
+bool calLoop(float(*fkt)(void), float min, float max)
+{
+  bool ret = false;
+  unsigned long end = millis() + CALTIME;
+  while((end - millis()) < 0)
+  {
+    float cur = fkt();
+    if(isfinite(cur))
+    {
+      ret = true;
+      if(cur < min) {
+        min = cur;
+      } else if(cur > max) {
+        max = cur;
+      }
+    }
+    delay(1);
+  }
+  return ret;
+}
+
 NULLSensor::NULLSensor(int addr)
 {
   _addr = addr;

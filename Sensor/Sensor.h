@@ -9,6 +9,8 @@
 #include "Adafruit_AM2315.h"
 #include "SparkFunISL29125.h"
 
+#define CALTIME 60000
+
 enum SensorType
 {
   None = 0,
@@ -30,7 +32,7 @@ public:
 
   virtual float read(void)    = 0;
   virtual int   read(char*)   = 0;
-//  virtual bool getCal(char*) = 0;
+  virtual bool getCal(char*) = 0;
 };
 
 class NULLSensor: public Sensor

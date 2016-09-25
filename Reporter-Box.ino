@@ -123,7 +123,7 @@ void calibrateSensor(char *id)
 
   if(S)
   {
-    //S->getCal(id); TODO
+    S->getCal(id);
   }
 
   publishTimer.start();
