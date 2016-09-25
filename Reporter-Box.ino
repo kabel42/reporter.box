@@ -123,6 +123,7 @@ void calibrateSensor(char *idIn)
   id[1] = (lId >> 16) & 0xFF;
   id[2] = (lId >>  8) & 0xFF;
   id[3] = (lId >>  0) & 0xFF;
+  id[4] = 0;
 
   //get I2C Address
   int addr = id[0];
