@@ -17,7 +17,7 @@ std::vector<Sensor *> sensorList;
 char data[255];
 int delaytime = 60000;
 
-MicroOLED oled(MODE_I2C, D7, 1);
+MicroOLED oled(MODE_I2C, D7, 0);
 
 enum dsplStatus
 {
@@ -132,6 +132,12 @@ int calibrateSensor(String idIn)
 
   if(S)
   {
+    oled.clear(PAGE);
+    oled.setCursor(0, 0);  // Set the text cursor to the upper-left of the screen.
+    oled.println("Calibrating...");
+    oled.println(id);
+    oled.display();
+
     ret = S->getCal(id);
   }
 
