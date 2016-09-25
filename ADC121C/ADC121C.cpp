@@ -45,7 +45,7 @@ int ADC121CSensor::read(char* status)
   {
     data = read();
 
-    publishData(_addr, "ADC", ((9.95 / 4096.0) * data + 0.05), offset, scale, "AD121C");
+    publishData(_addr, "ADC", data, offset, scale, "AD121C");
 
     return 0;
   }
@@ -63,7 +63,7 @@ int MQ131Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "OZO", ((100 / 4096.0) * data), offset, scale, "MQ131");
+    publishData(_addr, "OZO", data, offset, scale, "MQ131");
 
     return 0;
   }
@@ -81,7 +81,7 @@ int MQ4Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "MET", ((100 / 4096.0) * data), offset, scale, "MQ4");
+    publishData(_addr, "MET", data, offset, scale, "MQ4");
 
     return 0;
   }
@@ -99,7 +99,7 @@ int MQ135Sensor::read(char* status)
   {
     data = ADC121CSensor::read();
 
-    publishData(_addr, "NH3", ((100 / 4096.0) * data), offset, scale, "MQ135");
+    publishData(_addr, "NH3", data, offset, scale, "MQ135");
 
     return 0;
   }

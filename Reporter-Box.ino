@@ -112,12 +112,12 @@ class Sensor * getSensorById(int id) {
   return NULL;
 }
 
-void calibrateSensor(char *idIn)
+int calibrateSensor(String idIn)
 {
   //Stop normal updates
   publishTimer.stop();
 
-  long lId = atol(idIn);
+  long lId = idIn.toInt();
   char id[5];
   id[0] = (lId >> 24) & 0xFF;
   id[1] = (lId >> 16) & 0xFF;
@@ -128,13 +128,16 @@ void calibrateSensor(char *idIn)
   //get I2C Address
   int addr = id[0];
   Sensor *S = getSensorById(addr);
+  int ret;
 
   if(S)
   {
-    S->getCal(id);
+    ret = S->getCal(id);
   }
 
   publishTimer.start();
+
+  return ret;
 }
 
 void setup()
@@ -179,6 +182,8 @@ void setup()
 
   //Relay
   relay = new Relay();
+
+  Particle.function("calibrate", calibrateSensor);
 }
 
 void loop()

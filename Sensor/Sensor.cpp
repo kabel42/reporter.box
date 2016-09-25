@@ -22,6 +22,7 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   if(isfinite(raw))
   {
     snprintf(rawStr, 34, "\"uncalibrated_value\": %.2f,", raw);
+    
     float data = (raw*scale)+offset;
     if(data<1)
     {
@@ -29,6 +30,10 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
     } else if(data>10)
     {
       data = 10;
+    }
+    if(scale == 0)
+    {
+      data = 0;
     }
     snprintf(dataStr, 34, "\"calibrated_value\": %.2f,", data);
   } else {
