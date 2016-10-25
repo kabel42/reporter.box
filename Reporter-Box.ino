@@ -129,11 +129,25 @@ int setWifi(String data)
     }
     ssid += data[i];
   }
+
+  i++;
+
   for(;(i<255) && (data[i] != 0); i++)
   {
     pw += data[i];
   }
   WiFi.setCredentials(ssid, pw);
+  return 0;
+}
+
+int getWifi(String data)
+{
+  WiFiAccessPoint ap[5];
+  int found = WiFi.getCredentials(ap, 5);
+  for (int i = 0; i < found; i++)
+  {
+    Particle.publish("SSID", ap[i].ssid);
+  }
 }
 
 int calibrateSensor(String idIn)
@@ -218,8 +232,7 @@ void setup()
 
   Particle.function("calibrate", calibrateSensor);
   Particle.function("setWiFi", setWifi);
-
-
+  Particle.function("getWiFi", getWifi);
 }
 
 void loop()
