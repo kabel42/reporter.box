@@ -113,6 +113,25 @@ class Sensor * getSensorById(int id) {
   return NULL;
 }
 
+int setWifi(String data)
+{
+  String ssid="", pw="";
+  int i = 0;
+  for(;(i<255) && (data[i] != '#'); i++)
+  {
+    if(data[i] == 0)
+    {
+      return -1;
+    }
+    ssid += data[i];
+  }
+  for(;(i<255) && (data[i] != 0); i++)
+  {
+    pw += data[i];
+  }
+  WiFi.setCredentials(ssid, pw);
+}
+
 int calibrateSensor(String idIn)
 {
   //Stop normal updates
@@ -194,6 +213,7 @@ void setup()
   relay = new Relay();
 
   Particle.function("calibrate", calibrateSensor);
+  Particle.function("setWiFi", setWifi);
 }
 
 void loop()
