@@ -42,9 +42,9 @@ int Relay::setRelay(long num, bool newState)
       static uint8_t relayStatus = 0;
       if(newState)
       {
-        relayStatus |= 1<<(num-1);
+        relayStatus |= 1<<(4-num);
       } else {
-        relayStatus &= ~(1<<(num-1));
+        relayStatus &= ~(1<<(4-num));
       }
 
       Wire.beginTransmission(relay_addr);
@@ -102,17 +102,8 @@ bool Relay::getRelay(int num)
   if (num > 0 && num < 5) {
     if(i2c)
     {
-      Wire.beginTransmission(relay_addr);
-      Wire.write(0x09); //GPIO PORT
-      Wire.endTransmission();
-
-      Wire.requestFrom(relay_addr, (uint8_t)1);
-      if(Wire.available())
-      {
-        status = Wire.read();
-        return ((status>>(num-1))&1);
-      }
-      return false;
+        status = getStatus("");
+        return ((status>>(4-num))&1);
     } else {
       digitalRead(relayPins[num-1]);
     }
