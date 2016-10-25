@@ -17,6 +17,8 @@ std::vector<Sensor *> sensorList;
 char data[255];
 int delaytime = 60000;
 
+STARTUP(WiFi.selectAntenna(ANT_EXTERNAL));
+
 MicroOLED oled(MODE_I2C, D7, 0);
 
 enum dsplStatus
@@ -214,6 +216,8 @@ void setup()
 
   Particle.function("calibrate", calibrateSensor);
   Particle.function("setWiFi", setWifi);
+
+
 }
 
 void loop()
