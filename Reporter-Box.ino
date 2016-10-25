@@ -17,7 +17,9 @@ std::vector<Sensor *> sensorList;
 char data[255];
 int delaytime = 60000;
 
+#if Wiring_WiFi
 STARTUP(WiFi.selectAntenna(ANT_EXTERNAL));
+#endif
 
 MicroOLED oled(MODE_I2C, D7, 0);
 
