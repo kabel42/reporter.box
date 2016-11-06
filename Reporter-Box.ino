@@ -117,6 +117,7 @@ class Sensor * getSensorById(int id) {
   return NULL;
 }
 
+#if Wiring_WiFi
 int setWifi(String data)
 {
   String ssid="", pw="";
@@ -149,6 +150,7 @@ int getWifi(String data)
     Particle.publish("SSID", ap[i].ssid);
   }
 }
+#endif
 
 int calibrateSensor(String idIn)
 {
@@ -231,8 +233,11 @@ void setup()
   relay = new Relay();
 
   Particle.function("calibrate", calibrateSensor);
+
+#if Wiring_WiFi
   Particle.function("setWiFi", setWifi);
   Particle.function("getWiFi", getWifi);
+#endif
 }
 
 void loop()
