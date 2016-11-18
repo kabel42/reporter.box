@@ -1,6 +1,8 @@
 #include <math.h>
 #include <algorithm>    // std::for_each
 #include <vector>       // std::vector
+#include <stdio.h>
+#include <string>
 
 #include "Sensor.h"
 
@@ -187,6 +189,45 @@ int calibrateSensor(String idIn)
   return ret;
 }
 
+int setSensorCal(String data)
+{
+  String tmp = "";
+  int i = 0;
+  float offset, scale;
+
+  for(; i < 5 && data[i] != '#'; i++)
+  {
+    tmp += data[i];
+  }
+
+  long lId = tmp.toInt();
+  char id[5];
+  id[0] = (lId >> 24) & 0xFF;
+  id[1] = (lId >> 16) & 0xFF;
+  id[2] = (lId >>  8) & 0xFF;
+  id[3] = (lId >>  0) & 0xFF;
+  id[4] = 0;
+
+  tmp = "";
+
+  for(; i < data.length() && data[i] != '#'; i++)
+  {
+    tmp += data[i];
+  }
+  offset = tmp.toFloat();
+
+  tmp = "";
+
+  for(; i < data.length() && data[i] != 0; i++)
+  {
+    tmp += data[i];
+  }
+  scale = tmp.toFloat();
+
+  Sensor *S = getSensorById(id[0]);
+  return S->setCal(id, offset, scale);
+}
+
 void setup()
 {
   //Get Device Name
@@ -231,6 +272,7 @@ void setup()
   relay = new Relay();
 
   Particle.function("calibrate", calibrateSensor);
+  Particle.function("setCal", setSensorCal);
   Particle.function("setWiFi", setWifi);
   Particle.function("getWiFi", getWifi);
 }

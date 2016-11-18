@@ -124,6 +124,11 @@ bool NULLSensor::getCal(char *id)
   return false;
 }
 
+bool NULLSensor::setCal(char* id, float offset, float scale)
+{
+  return false;
+}
+
 VCNL4010Sensor::VCNL4010Sensor(int addr): drv()
 {
   if(addr != 0)
@@ -174,6 +179,21 @@ bool VCNL4010Sensor::getCal(char *id)
     return false;
   }
 }
+bool VCNL4010Sensor::setCal(char* id, float offset, float scale)
+{
+  if(id[1] == 'A' && id[2] == 'M' && id[3] == 'B') {
+    offsetAMB = offset;
+    scaleAMB  = scale;
+    return true;
+  } else if(id[1] == 'P' && id[2] == 'R' && id[3] == 'X') {
+    offsetPRX = offset;
+    scalePRX = scale;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 float VCNL4010Sensor::getVal(char *id)
 {
@@ -274,6 +294,21 @@ bool AM2315Sensor::getCal(char *id)
   }
 }
 
+bool AM2315Sensor::setCal(char* id, float offset, float scale)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+    offsetRH = offset;
+    scaleRH  = scale;
+    return true;
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    offsetTMP = offset;
+    scaleTMP  = scale;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 ISL29125Sensor::ISL29125Sensor(int addr): drv()
 {
@@ -340,6 +375,25 @@ bool ISL29125Sensor::getCal(char *id)
     return calLoop(this, id, &offsetG, &scaleG);
   } else if(id[1] == 'B') {
     return calLoop(this, id, &offsetB, &scaleB);
+  } else {
+    return false;
+  }
+}
+
+bool ISL29125Sensor::setCal(char* id, float offset, float scale)
+{
+  if(id[1] == 'R') {
+    offsetR = offset;
+    scaleR  = scale;
+    return true;
+  } else if(id[1] == 'G') {
+    offsetG = offset;
+    scaleG  = scale;
+    return true;
+  } else if(id[1] == 'B') {
+    offsetB = offset;
+    scaleB  = scale;
+    return true;
   } else {
     return false;
   }

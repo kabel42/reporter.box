@@ -21,6 +21,7 @@ public:
   int   read(char*);
   bool  getCal(char*);
   float getVal(char*);
+  bool setCal(char*, float, float);
 };
 
 #endif

@@ -100,3 +100,18 @@ bool HTU20DSensor::getCal(char *id)
     return false;
   }
 }
+
+bool HTU20DSensor::setCal(char* id, float offset, float scale)
+{
+  if(id[1] == 'R' && id[2] == 'H') {
+    offsetRH = offset;
+    scaleRH  = scale;
+    return true;
+  } else if(id[1] == 'T' && id[2] == 'M' && id[3] == 'P') {
+    offsetTMP = offset;
+    scaleTMP  = scale;
+    return true;
+  } else {
+    return false;
+  }
+}
