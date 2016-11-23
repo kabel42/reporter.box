@@ -125,3 +125,10 @@ bool AudioSensor::getCal(char *id)
 {
   return calLoop(this, id, &offset, &scale);
 }
+
+bool AudioSensor::setCal(char* id, float offset, float scale)
+{
+  this->offset = offset;
+  this->scale  = scale;
+  return true;
+}

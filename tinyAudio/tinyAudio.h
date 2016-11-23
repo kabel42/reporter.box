@@ -21,5 +21,6 @@ public:
   int   read(char*);
   void  poll();
   bool  getCal(char*);
+  bool setCal(char*, float, float);
 };
 #endif

@@ -17,6 +17,7 @@ public:
   float read(void);
   int   read(char*);
   bool  getCal(char*);
+  bool setCal(char*, float, float);
 };
 
 class MQ131Sensor: public ADC121CSensor
@@ -30,7 +31,8 @@ public:
     }
   };
   int read(char*);
-  bool  getCal(char*);
+  bool getCal(char*);
+  bool setCal(char*, float, float);
 };
 
 class MQ4Sensor: public ADC121CSensor
@@ -44,7 +46,8 @@ public:
     }
   };
   int read(char*);
-  bool  getCal(char*);
+  bool getCal(char*);
+  bool setCal(char*, float, float);
 };
 
 class MQ135Sensor: public ADC121CSensor
@@ -58,6 +61,7 @@ public:
     }
   };
   int read(char*);
-  bool  getCal(char*);
+  bool getCal(char*);
+  bool setCal(char*, float, float);
 };
 #endif

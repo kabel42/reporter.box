@@ -32,6 +32,7 @@ public:
   virtual int   read(char*)   = 0;
   virtual bool  getCal(char*) = 0;
   virtual float getVal(char*);
+  virtual bool  setCal(char*, float, float) = 0;
 };
 
 void publishData(uint8_t addr, char* measID, float raw, float offset, float scale, char* sens);
@@ -50,6 +51,7 @@ public:
   int   read(char*);
   bool  getCal(char*);
   float getVal(char*);
+  bool  setCal(char*, float, float);
 };
 
 class VCNL4010Sensor: public Sensor
@@ -67,6 +69,7 @@ public:
   int   read(char*);
   bool  getCal(char*);
   float getVal(char*);
+  bool  setCal(char*, float, float);
 };
 
 class AnalogSensor: public Sensor
@@ -80,6 +83,7 @@ public:
   float read(void);
   int   read(char*);
   bool  getCal(char*);
+  bool  setCal(char*, float, float);
 };
 
 class AM2315Sensor: public Sensor
@@ -97,6 +101,7 @@ public:
   int   read(char*);
   bool  getCal(char*);
   float getVal(char*);
+  bool  setCal(char*, float, float);
 };
 
 class ISL29125Sensor: public Sensor
@@ -116,5 +121,6 @@ public:
   int   read(char*);
   bool  getCal(char*);
   float getVal(char*);
+  bool  setCal(char*, float, float);
 };
 #endif

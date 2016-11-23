@@ -17,5 +17,6 @@ public:
   float read(void);
   int   read(char*);
   bool  getCal(char*);
+  bool setCal(char*, float, float);
 };
 #endif
