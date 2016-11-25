@@ -265,8 +265,16 @@ int AM2315Sensor::read(char* status)
   if(initOK)
   {
     //sprintf(status, "AMB#%i#?##DIST#%i#?", drv.readAmbient(), drv.readProximity());
-    publishData(_addr, "TMP", drv.readTemperature(), offsetTMP, scaleTMP, "AM2315");
-    publishData(_addr, "RH", drv.readHumidity(), offsetRH, scaleRH, "AM2315");
+    float tmp, rh;
+    if(drv.readTemperatureAndHumidity(&tmp, &rh)) {
+      publishData(_addr, "TMP", tmp, offsetTMP, scaleTMP, "AM2315");
+      publishData(_addr, "RH", rh, offsetRH, scaleRH, "AM2315");
+      return 0;
+    } else {
+      return -1;
+    }
+  //  publishData(_addr, "TMP", drv.readTemperature(), offsetTMP, scaleTMP, "AM2315");
+  //  publishData(_addr, "RH", drv.readHumidity(), offsetRH, scaleRH, "AM2315");
     return 0;
   }
   return -1;

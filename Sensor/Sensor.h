@@ -90,7 +90,7 @@ class AM2315Sensor: public Sensor
 {
 public:
   Adafruit_AM2315 drv;
-  const enum SensorType sensType = Light;
+  const enum SensorType sensType = TMP;
   float offsetTMP = 0;
   float scaleTMP  = 0;
   float offsetRH = 0;
