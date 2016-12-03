@@ -232,20 +232,27 @@ int setSensorCal(String data)
 
 void setup()
 {
+  Serial.begin();
+  Serial.println("Get Name...");
+
   //Get Device Name
   Particle.subscribe("spark/", handler);
   Particle.publish("spark/device/name");
   //delay(1000);
   //Particle.unsubscribe();
 
+  Serial.println("Init I2C");
   //Setup I2C
   Wire.setSpeed(10000);
   Wire.begin();
 
+  Serial.println("init Audio");
   audioSens = new AudioSensor(0, delaytime);
 
+  Serial.println("init OLED");
   setupOled();
 
+  Serial.println("test I2C");
   //debug I2C
   i2cTest();
 
@@ -255,6 +262,7 @@ void setup()
   delay(500);
   //End FIX
 
+  Serial.println("Init Sensors");
   //Init Sensors
   sensorList.push_back(new AM2315Sensor(0));
   sensorList.push_back(new HTU20DSensor(0));
@@ -273,6 +281,7 @@ void setup()
   //Relay
   relay = new Relay();
 
+  Serial.println("register Cloud Functions");
   Particle.function("calibrate", calibrateSensor);
   Particle.function("setCal", setSensorCal);
 
@@ -280,6 +289,7 @@ void setup()
   Particle.function("setWiFi", setWifi);
   Particle.function("getWiFi", getWifi);
 #endif
+  Serial.println("Setup Done");
 }
 
 void loop()
@@ -347,4 +357,6 @@ void loop()
   };
   oled.display();
   delay(10);
+
+  Serial.print(".");
 }
