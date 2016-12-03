@@ -90,13 +90,27 @@ void i2cTest()
     int error = Wire.endTransmission();
     delay(10);
 
+    snprintf(data, 250, "0x%X", i);
+
+    Serial.println();
+    Serial.print(data);
+    Serial.print(": ");
+
     if(error == 0)
     {
-      snprintf(data, 250, "0x%X", i);
       Particle.publish("I2C", data);
+      Serial.print("OK");
+      oled.clear(PAGE);
+      oled.println("I2C test");
+      oled.println(data);
+      oled.println("OK");
+      oled.display();
       delay(1000);
+    } else {
+      Serial.print("NA");
     }
   }
+  Serial.println();
 }
 
 //Relay
@@ -246,11 +260,11 @@ void setup()
   Wire.setSpeed(10000);
   Wire.begin();
 
-  Serial.println("init Audio");
-  audioSens = new AudioSensor(0, delaytime);
-
   Serial.println("init OLED");
   setupOled();
+
+  Serial.println("init Audio");
+  audioSens = new AudioSensor(0, delaytime);
 
   Serial.println("test I2C");
   //debug I2C

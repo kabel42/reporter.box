@@ -45,6 +45,12 @@ void publishData(uint8_t addr, char* measID, float raw, float offset, float scal
   snprintf(pubstring, 250, "{%s %s \"sensor\": {\"address\": %li}}", rawStr, dataStr, id);
 
   Particle.publish("measurement", pubstring);
+  Serial.print(addr);
+  Serial.print(", ");
+  Serial.print(measID);
+  Serial.print(", ");
+  Serial.print(raw);
+  Serial.print(", ");
   Serial.println(pubstring);
   delay(1000);
 }
