@@ -134,10 +134,25 @@ void MicroOLED::begin() {
 	}
 	else if (interface == MODE_I2C)
 	{
-		if (dcPin == 0)
+		if (dcPin == 0) {
 			dcPin = I2C_ADDRESS_SA0_0;
-		else
+		} else if (dcPin == 1) {
 			dcPin = I2C_ADDRESS_SA0_1;
+		} else {
+			Wire.beginTransmission(I2C_ADDRESS_SA0_0;);
+	    delay(10);
+	    int error = Wire.endTransmission();
+			if(error == 0) {
+				dcPin = I2C_ADDRESS_SA0_0;
+			} else {
+				Wire.beginTransmission(I2C_ADDRESS_SA0_1;);
+		    delay(10);
+		    int error = Wire.endTransmission();
+				if(error == 0) {
+					dcPin = I2C_ADDRESS_SA0_1;
+				}
+			}
+		}
 		i2cSetup();
 	}
 
