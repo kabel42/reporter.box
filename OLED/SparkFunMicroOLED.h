@@ -32,7 +32,7 @@
 #define CS_DEFAULT		A2
 #define MODE_DEFAULT	MODE_SPI
 
-#define I2C_ADDRESS_SA0_0 0b0111100 //0x3C 
+#define I2C_ADDRESS_SA0_0 0b0111100 //0x3C
 #define I2C_ADDRESS_SA0_1 0b0111101 //0x3D
 #define I2C_COMMAND 0x00
 #define I2C_DATA 0x40
@@ -40,8 +40,8 @@
 #define BLACK 0
 #define WHITE 1
 
-#define LCDWIDTH			64
-#define LCDHEIGHT			48
+#define LCDWIDTH			128
+#define LCDHEIGHT			64
 #define FONTHEADERSIZE		6
 
 #define NORM				0

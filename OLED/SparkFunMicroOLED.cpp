@@ -42,7 +42,7 @@ const unsigned char *MicroOLED::fontsPointer[]={
 Page buffer 64 x 48 divided by 8 = 384 bytes
 Page buffer is required because in SPI mode, the host cannot read the SSD1306's GDRAM of the controller.  This page buffer serves as a scratch RAM for graphical functions.  All drawing function will first be drawn on this page buffer, only upon calling display() function will transfer the page buffer to the actual LCD controller's memory.
 */
-static uint8_t screenmemory [] = {
+static uint8_t screenmemory [LCDWIDTH*(LCDHEIGHT/8)] = {
 	/* LCD Memory organised in 64 horizontal pixel and 6 rows of byte
 	 B  B .............B  -----
 	 y  y .............y        \
@@ -153,7 +153,7 @@ void MicroOLED::begin() {
 			// bring out of reset
 			//pinMode(rstPin,INPUT_PULLUP);
 			digitalWrite(rstPin, HIGH);
-			
+
 			Wire.beginTransmission(I2C_ADDRESS_SA0_0);
 	    delay(10);
 	    int error = Wire.endTransmission();
@@ -190,7 +190,7 @@ void MicroOLED::begin() {
 	command(0x80);					// the suggested ratio 0x80
 
 	command(SETMULTIPLEX);			// 0xA8
-	command(0x2F);
+	command(LCDHEIGHT-1);
 
 	command(SETDISPLAYOFFSET);		// 0xD3
 	command(0x0);					// no offset
@@ -275,7 +275,7 @@ void MicroOLED::setPageAddress(uint8_t add) {
     Send column address command and address to the SSD1306 OLED controller.
 */
 void MicroOLED::setColumnAddress(uint8_t add) {
-	command((0x10|(add>>4))+0x02);
+	command((0x10|(add>>4)));
 	command((0x0f&add));
 	return;
 }
@@ -287,10 +287,10 @@ void MicroOLED::setColumnAddress(uint8_t add) {
 void MicroOLED::clear(uint8_t mode) {
 	//	uint8_t page=6, col=0x40;
 	if (mode==ALL) {
-		for (int i=0;i<8; i++) {
+		for (int i=0;i<(LCDHEIGHT/8); i++) {
 			setPageAddress(i);
 			setColumnAddress(0);
-			for (int j=0; j<0x80; j++) {
+			for (int j=0; j<LCDWIDTH; j++) {
 				data(0);
 			}
 		}
@@ -351,11 +351,11 @@ void MicroOLED::contrast(uint8_t contrast) {
 void MicroOLED::display(void) {
 	uint8_t i, j;
 
-	for (i=0; i<6; i++) {
+	for (int i=0;i<(LCDHEIGHT/8); i++) {
 		setPageAddress(i);
 		setColumnAddress(0);
-		for (j=0;j<0x40;j++) {
-			data(screenmemory[i*0x40+j]);
+		for (int j=0; j<LCDWIDTH; j++) {
+			data(screenmemory[i*LCDWIDTH+j]);
 		}
 	}
 }
