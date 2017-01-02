@@ -23,7 +23,7 @@ int delaytime = 60000;
 STARTUP(WiFi.selectAntenna(ANT_EXTERNAL));
 #endif
 
-MicroOLED oled(MODE_I2C, D7, 0);
+MicroOLED oled(MODE_I2C, D7, 2);
 
 enum dsplStatus
 {
@@ -101,6 +101,7 @@ void i2cTest()
       Particle.publish("I2C", data);
       Serial.print("OK");
       oled.clear(PAGE);
+      oled.setCursor(0, 0);
       oled.println("I2C test");
       oled.println(data);
       oled.println("OK");
@@ -324,12 +325,12 @@ void loop()
     case INIT:
       if(&devName != NULL)
         oled.println(devName);
-      oled.println("Running");
+        oled.println("Running");
       #if Wiring_WiFi
-      oled.println("on WiFi");
+        oled.println("on WiFi");
       #endif
       #if Wiring_Cellular
-      oled.println("on Cellular");
+        oled.println("on Cellular");
       #endif
 
       if(digitalRead(A3))

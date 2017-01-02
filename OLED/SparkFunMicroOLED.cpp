@@ -134,11 +134,26 @@ void MicroOLED::begin() {
 	}
 	else if (interface == MODE_I2C)
 	{
+		i2cSetup();
+
 		if (dcPin == 0) {
 			dcPin = I2C_ADDRESS_SA0_0;
 		} else if (dcPin == 1) {
 			dcPin = I2C_ADDRESS_SA0_1;
 		} else {
+			// Do the reset...
+			digitalWrite(rstPin, HIGH);
+			// VDD (3.3V) goes high at start, lets just chill for 5 ms
+			delay(5);
+			// bring reset low
+			digitalWrite(rstPin, LOW);
+
+			// wait 10ms
+			delay(10);
+			// bring out of reset
+			//pinMode(rstPin,INPUT_PULLUP);
+			digitalWrite(rstPin, HIGH);
+			
 			Wire.beginTransmission(I2C_ADDRESS_SA0_0);
 	    delay(10);
 	    int error = Wire.endTransmission();
@@ -153,7 +168,6 @@ void MicroOLED::begin() {
 				}
 			}
 		}
-		i2cSetup();
 	}
 
 	digitalWrite(rstPin, HIGH);
